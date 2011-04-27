@@ -13,7 +13,7 @@ ini_set('display_errors', 'On');
 set_include_path(
 	// distribution files (where the zip / tgz is unpacked)
 	dirname(dirname(__FILE__)) . PATH_SEPARATOR .
-
+    
 	// test file directory "tests"
 	dirname(__FILE__) . PATH_SEPARATOR .
 
