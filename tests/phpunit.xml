@@ -3,13 +3,10 @@
 	<logging>
 		<log type="coverage-html" target="coverage-report" charset="UTF-8"/>
 	</logging>
+	<testsuites>
+		<testsuite name="Image_Image">
+			<directory suffix=".php">./Image</directory>
+		</testsuite>
+	</testsuites>
 
-	<filter>
-		<whitelist>
-			<directory suffix=".php">../Image</directory>
-			<exclude>
-				<file>./run.php</file>
-			</exclude>
-		</whitelist>
-	</filter>
 </phpunit>

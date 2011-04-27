@@ -1,6 +1,6 @@
 <?php 
 
-class Image_Color
+class Image_Colour
 {
     private $__alpha = 0;
     
