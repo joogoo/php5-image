@@ -2,11 +2,10 @@
 <phpunit bootstrap="phpunit.bootstrap.inc" colors="true">
 	<logging>
 		<log type="coverage-html" target="coverage-report" charset="UTF-8"/>
-		<!--<log type="testdox-text" target="testdox.txt" charset="UTF-8"/>-->
 	</logging>
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../Apache</directory>
+			<directory suffix=".php">../Image</directory>
 			<exclude>
 				<file>./run.php</file>
 			</exclude>

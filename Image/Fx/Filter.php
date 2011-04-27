@@ -41,6 +41,9 @@
  * @since     File available since Release 1.0.0
  */
 
+require_once 'Image/Plugin/Base.php';
+
+require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Filter extends Image_Plugin_Base implements Image_Plugin_Interface {
 
