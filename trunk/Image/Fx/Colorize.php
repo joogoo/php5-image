@@ -1,6 +1,6 @@
 <?php
 /**
- * image-fx-crop
+ * image-fx-flip
  *
  * Copyright (c) 2009-2011, Nikolay Petrovski <to.petrovski@gmail.com>.
  * All rights reserved.
@@ -47,77 +47,44 @@ require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
-class Image_Fx_Crop extends Image_Plugin_Base implements Image_Plugin_Interface {
+class Image_Fx_Colorize extends Image_Plugin_Base implements Image_Plugin_Interface {
 
     public $type_id = "effect";
 
-    public $sub_type_id = "crop";
+    public $sub_type_id = "colorize";
 
     public $version = 1.0;
 
-    public function __construct($crop_x = 0, $crop_y = 0)
+    public function __construct($find = '000000', $replace = '000000')
     {
-        $this->crop_x = $crop_x;
-        $this->crop_y = $crop_y;
+        $this->find = $find;
+        $this->replace = $replace;
     }
 
-    public function setCrop($crop_x = 0, $crop_y = 0)
+    public function setColorize($find = '000000', $replace = '000000')
     {
-        $this->crop_x = $crop_x;
-        $this->crop_y = $crop_y;
+        $this->find = $find;
+        $this->replace = $replace;
         return $this;
-    }
-
-    public function calculate()
-    {
-
-        $old_x = $this->_owner->imagesx();
-        $old_y = $this->_owner->imagesy();
-
-        $this->canvas_x = $old_x;
-        $this->canvas_y = $old_y;
-        
-        //Calculate the cropping area
-        if ($this->crop_x > 0) {
-            if ($this->canvas_x > $this->crop_x) {
-                $this->canvas_x = $this->crop_x;
-            }
-        }
-        
-        if ($this->crop_y > 0) {
-            if ($this->canvas_y > $this->crop_y) {
-                $this->canvas_y = $this->crop_y;
-            }
-        }
-
-        return true;
     }
 
     public function generate()
     {
-        $this->calculate();
 
-        $crop = new Image_Image();
-        $crop->createImageTrueColorTransparent($this->canvas_x, $this->canvas_y);
-
-        $src_x = $this->_owner->handle_x-floor($this->canvas_x/2);
-        $src_y = $this->_owner->handle_y-floor($this->canvas_y/2);
-
-        imagecopy(
-            $crop->image,
-            $this->_owner->image,
-            0,
-            0,
-            $src_x,
-            $src_y,
-            $this->canvas_x,
-            $this->canvas_y
-        );
-
-        $this->_owner->image = $crop->image;
+        $findColor = Image_Image::hexColorToArrayColor($this->find);
+        $replaceColor = Image_Image::hexColorToArrayColor($this->replace);
         
-        unset($crop);
-
+        $index = imagecolorclosest($this->_owner->image, 
+                                   $findColor['red'], 
+                                   $findColor['green'], 
+                                   $findColor['blue']);//find
+                                   
+        imagecolorset($this->_owner->image, $index, 
+                                   $replaceColor['red'], 
+                                   $replaceColor['green'], 
+                                   $replaceColor['blue']);//replace
+        
+        unset($index);
         return true;
     }
 }

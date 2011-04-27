@@ -3,6 +3,7 @@
 	<logging>
 		<log type="coverage-html" target="coverage-report" charset="UTF-8"/>
 	</logging>
+
 	<filter>
 		<whitelist>
 			<directory suffix=".php">../Image</directory>

@@ -86,6 +86,18 @@ class Image_Draw_Captcha extends Image_Plugin_Base implements Image_Plugin_Inter
         $this->text_spacing = $spacing;
         return $this;
     }
+    
+    public function setSizeRandom($size_random)
+    {
+        $this->text_size_random = $size_random;
+        return $this;
+    }
+    
+    public function setAngleRandom($angle_random)
+    {
+        $this->text_angle_random = $angle_random;
+        return $this;
+    }
 
     public function generate()
     {

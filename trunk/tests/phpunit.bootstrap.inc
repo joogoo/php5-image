@@ -1,5 +1,7 @@
 <?php
-
+defined('TEST_BASE')
+    || define('TEST_BASE', realpath(dirname(__FILE__)));
+    
 // set error reporting high
 error_reporting(E_ALL | E_STRICT);
 
@@ -19,10 +21,9 @@ set_include_path(
 	get_include_path()
 );
 
+function _autoload($class) {
+    require_once str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+}
+
 // set up an autoload for Zend / Pear style class loading
-spl_autoload_register(
-	function($class)
-	{
-		include(str_replace("_", DIRECTORY_SEPARATOR, $class) . ".php");
-	}
-);
+spl_autoload_register('_autoload');

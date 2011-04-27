@@ -46,21 +46,21 @@
  *
  * @author Nikolay Petrovski <to.petrovski@gmail.com>
  * 
- * Usage:
+ * Sample usage:
  *
-==============================================================
-$tmp_name = $_FILES['image_upload']['tmp_name'];
-$image = new Image_Image($tmp_name);
-
-if ( !$image->testImageHandle() ) {
-    //Display an error to the user;
-}
-
-$image->attach(new Image_Fx_Resize(200));
-$image->attach(new Image_Fx_Crop(0,160));
-
-$image->imagePng("thumbnail.png");
-==============================================================
+ * ==============================================================
+ * $tmp_name = $_FILES['image_upload']['tmp_name'];
+ * $image = new Image_Image($tmp_name);
+ * 
+ * if ( !$image->testImageHandle() ) {
+ *     //Display an error to the user;
+ * }
+ * 
+ * $image->attach(new Image_Fx_Resize(200));
+ * $image->attach(new Image_Fx_Crop(0,160));
+ * 
+ * $image->imagePng("thumbnail.png");
+ * ==============================================================
  *
  *
  */
@@ -367,17 +367,7 @@ class Image_Image {
 
     public function testImageHandle()
     {
-        if(isset($this->image)) {
-            if(get_resource_type($this->image) == "gd") {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
+        return (bool) (isset($this->image) && 'gd' == get_resource_type($this->image));
     }
 
     public static function arrayColorToIntColor($arrColor = array(0,0,0))
@@ -431,12 +421,10 @@ class Image_Image {
             return $this->image;
         }
         if($name == "handle_x") {
-            return ($this->mid_handle == true) ? floor($this->imagesx() /
-             2) : 0;
+            return ($this->mid_handle == true) ? floor($this->imagesx() / 2) : 0;
         }
         if($name == "handle_y") {
-            return ($this->mid_handle == true) ? floor($this->imagesy() /
-             2) : 0;
+            return ($this->mid_handle == true) ? floor($this->imagesy() / 2) : 0;
         }
         if(substr($name, 0, 2) == "a_") {
             return $this->attachments_stack[$name];
@@ -465,6 +453,7 @@ class Image_Image {
     private function _detectGD()
     {
         $this->gd_info = gd_info();
+        
         preg_match('/\d+/', $this->gd_info['GD Version'], $match);
         $this->gd_version = $match[0];
         $this->gd_support_gif = $this->gd_info['GIF Create Support'];
