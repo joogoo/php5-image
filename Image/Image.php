@@ -200,18 +200,19 @@ class Image_Image {
         }
     }
 
-    public function sendHeader($image_format = IMAGE_TYPE_PNG)
+    public function sendHeader($image_format = IMAGETYPE_PNG)
     {
+
         switch ($image_format) {
-            case IMAGE_TYPE_GIF:
+            case IMAGETYPE_GIF:
                 header("Content-type: image/gif");
                 return true;
                 break;
-            case IMAGE_TYPE_PNG:
+            case IMAGETYPE_PNG:
                 header("Content-type: image/png");
                 return true;
                 break;
-            case IMAGE_TYPE_JPEG:
+            case IMAGETYPE_JPEG:
                 header("Content-type: image/jpeg");
                 return true;
                 break;
@@ -231,7 +232,7 @@ class Image_Image {
                 return imagegif($this->image, $filename);
             }
             else {
-                if($this->sendHeader(IMAGE_TYPE_GIF)) {
+                if($this->sendHeader(IMAGETYPE_GIF)) {
                     return imagegif($this->image);
                 }
             }
@@ -253,7 +254,7 @@ class Image_Image {
                 return imagepng($this->image, $filename);
             }
             else {
-                if($this->sendHeader(IMAGE_TYPE_PNG)) {
+                if($this->sendHeader(IMAGETYPE_PNG)) {
                     return imagepng($this->image);
                 }
             }
@@ -274,7 +275,7 @@ class Image_Image {
                 return imagejpeg($this->image, $filename, $quality);
             }
             else {
-                if($this->sendHeader(IMAGE_TYPE_JPEG)) {
+                if($this->sendHeader(IMAGETYPE_JPEG)) {
                     return imagejpeg($this->image, "", $quality);
                 }
             }
@@ -415,7 +416,7 @@ class Image_Image {
         return $intColor;
     }
 
-    protected function __get($name)
+    public function __get($name)
     {
         if($name == "image") {
             return $this->image;
@@ -437,7 +438,7 @@ class Image_Image {
         }
     }
 
-    protected function __set($name, $value)
+    public function __set($name, $value)
     {
         if($name == "image") {
             $this->image = $value;
@@ -453,12 +454,12 @@ class Image_Image {
     private function _detectGD()
     {
         $this->gd_info = gd_info();
-        
+
         preg_match('/\d+/', $this->gd_info['GD Version'], $match);
         $this->gd_version = $match[0];
         $this->gd_support_gif = $this->gd_info['GIF Create Support'];
         $this->gd_support_png = $this->gd_info['PNG Support'];
-        $this->gd_support_jpg = $this->gd_info['JPG Support'];
+        $this->gd_support_jpg = (key_exists('JPG Support', $this->gd_info)) ? $this->gd_info['JPG Support'] : $this->gd_info['JPEG Support'];
         $this->gd_support_ttf = $this->gd_info['FreeType Support'];
     }
 
