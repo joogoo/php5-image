@@ -92,6 +92,11 @@
             echo "<div class=\"thumb\"><img src=\"samples/captcha.php\"></div>";
             echo "<div class=\"caption\">Captcha</div>";
         echo "</div>";
+
+        echo "<div class=\"thumbHolder\" style=\"background: url('samples/bg/1.gif');\">";
+            echo "<div class=\"thumb\"><img src=\"samples/colorize.php\"></div>";
+            echo "<div class=\"caption\">Captcha</div>";
+        echo "</div>";
         
     echo "</div>";
     
