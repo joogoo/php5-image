@@ -110,8 +110,7 @@ class Image_Draw_Captcha extends Image_Plugin_Base implements Image_Plugin_Inter
         $total_width = 0;
         for($x = 0; $x < strlen($this->password); $x ++) {
             $l[$x]['text'] = $this->password[$x];
-            $l[$x]['font'] = $this->arr_ttf_font[rand(0, count($this->arr_ttf_font) -
-             1)];
+            $l[$x]['font'] = $this->arr_ttf_font[rand(0, count($this->arr_ttf_font) - 1)];
             $l[$x]['size'] = rand($this->text_size, $this->text_size + $this->text_size_random);
             $l[$x]['angle'] = ($this->text_angle_random / 2) - rand(0, $this->text_angle_random);
             $captcha_dimensions = imagettfbbox($l[$x]['size'], $l[$x]['angle'], $l[$x]['font'], $l[$x]['text']);
