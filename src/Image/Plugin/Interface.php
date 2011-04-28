@@ -43,7 +43,7 @@
 
 
 interface Image_Plugin_Interface {
-
+    
     public function attachToOwner($owner);
 
     public function getTypeId();

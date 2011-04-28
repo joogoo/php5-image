@@ -44,6 +44,8 @@
 
 class Image_Plugin_Base {
 
+    protected $_owner;
+
     public function attachToOwner($owner)
     {
         $this->_owner = $owner;
