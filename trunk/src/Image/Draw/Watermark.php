@@ -45,9 +45,7 @@ require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
-class Image_Draw_Watermark extends Image_Plugin_Base implements Image_Plugin_Interface {
-
-    public $type_id = "draw";
+class Image_Draw_Watermark extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
     public $sub_type_id = "watermark";
 
@@ -62,13 +60,16 @@ class Image_Draw_Watermark extends Image_Plugin_Base implements Image_Plugin_Int
     public function setPosition()
     {
         $args = func_get_args();
-        if(count($args) == 1) {
-            $this->position = $args[0];
-        }
-        elseif(count($args) == 2) {
-            $this->position = "user";
-            $this->position_x = $args[0];
-            $this->position_y = $args[1];
+        switch (count($args)) {
+            case 1:
+                $this->position = $args[0];
+                break;
+            
+            case 2:
+                $this->position = "user";
+                $this->position_x = $args[0];
+                $this->position_y = $args[1];
+                break;
         }
     }
 
@@ -120,10 +121,8 @@ class Image_Draw_Watermark extends Image_Plugin_Base implements Image_Plugin_Int
                 $y = $height - $watermark_height;
                 break;
             case "user":
-                $x = $this->position_x - ($this->watermark->handle_x /
-                 2);
-                $y = $this->position_y - ($this->watermark->handle_y /
-                 2);
+                $x = $this->position_x - ($this->watermark->handle_x / 2);
+                $y = $this->position_y - ($this->watermark->handle_y / 2);
                 break;
             default:
                 $x = 0;

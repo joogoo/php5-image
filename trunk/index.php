@@ -95,7 +95,12 @@
 
         echo "<div class=\"thumbHolder\" style=\"background: url('samples/bg/1.gif');\">";
             echo "<div class=\"thumb\"><img src=\"samples/colorize.php\"></div>";
-            echo "<div class=\"caption\">Captcha</div>";
+            echo "<div class=\"caption\">Colorize</div>";
+        echo "</div>";
+
+        echo "<div class=\"thumbHolder\" style=\"background: url('samples/bg/2.gif');\">";
+            echo "<div class=\"thumb\"><img src=\"samples/psd.php\"></div>";
+            echo "<div class=\"caption\">PSD Parser</div>";
         echo "</div>";
         
     echo "</div>";

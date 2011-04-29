@@ -45,9 +45,7 @@ require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
-class Image_Draw_Captcha extends Image_Plugin_Base implements Image_Plugin_Interface {
-
-    public $type_id = "draw";
+class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
     public $sub_type_id = "captcha";
 

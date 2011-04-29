@@ -42,7 +42,7 @@
  */
 
 
-class Image_Plugin_Base {
+abstract class Image_Plugin_Base {
 
     protected $_owner;
 
