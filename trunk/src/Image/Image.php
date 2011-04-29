@@ -41,27 +41,6 @@
  * @since     File available since Release 1.0.0
  */
 
-
-/**
- *
- * @author Nikolay Petrovski <to.petrovski@gmail.com>
- * 
- * Sample usage:
- *
- * $tmp_name = $_FILES['image_upload']['tmp_name'];
- * $image = new Image_Image($tmp_name);
- * 
- * if ( !$image->testImageHandle() ) {
- *     //Display an error to the user;
- * }
- * 
- * $image->attach(new Image_Fx_Resize(200));
- * $image->attach(new Image_Fx_Crop(0,160));
- * 
- * $image->imagePng("thumbnail.png");
- *
- *
- */
 class Image_Image {
 
     public $image;
@@ -158,6 +137,11 @@ class Image_Image {
             $this->_reader = new Image_Reader_Default($filename);
             
             $this->image = $this->_reader->read($filename);
+
+            if('resource' != gettype($this->image)) {
+                unset($this->image);
+            }
+            
             $this->_file_info($filename);
         }
         else {
