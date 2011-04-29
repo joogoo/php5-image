@@ -102,6 +102,11 @@
             echo "<div class=\"thumb\"><img src=\"samples/psd.php\"></div>";
             echo "<div class=\"caption\">PSD Parser</div>";
         echo "</div>";
+
+        echo "<div class=\"thumbHolder\" style=\"background: url('samples/bg/3.gif');\">";
+            echo "<div class=\"thumb\"><img src=\"samples/ico.php\"></div>";
+            echo "<div class=\"caption\">ICO Parser</div>";
+        echo "</div>";
         
     echo "</div>";
     

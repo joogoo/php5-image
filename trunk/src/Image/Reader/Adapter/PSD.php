@@ -1,6 +1,6 @@
 <?
 /**
- * image-helper-psdreader
+ * image-helper-adapter-psd
  *
  * Copyright (c) 2009-2011, Nikolay Petrovski <to.petrovski@gmail.com>.
  * All rights reserved.
@@ -42,9 +42,7 @@
  */
 
 
-class Image_Helper_PSDReader extends Image_Helper_Abstract implements Image_Plugin_Interface {
-
-    public $sub_type_id = "psdreader";
+class Image_Reader_Adapter_PSD  extends Image_Reader_Abstract {
     
     public $version = 1.0;
     
@@ -58,11 +56,11 @@ class Image_Helper_PSDReader extends Image_Helper_Abstract implements Image_Plug
     
     public $colorBytesLength;
 
-    public function __construct($fileName) {
+    private function _init($filename) {
 
         set_time_limit(0);
         $this->infoArray = array();
-        $this->fileName = $fileName;
+        $this->fileName = $filename;
         $this->fp = fopen($this->fileName, 'r');
 
         if (fread($this->fp, 4) == '8BPS') {
@@ -103,11 +101,10 @@ class Image_Helper_PSDReader extends Image_Helper_Abstract implements Image_Plug
         }
     }
 
-    public function generate() {
+    public function getImage($filename) {
         
-    }
-
-    public function getImage() {
+        $this->_init($filename);
+        
         // decompress image data if required
         switch ($this->infoArray['compressionType']) {
             // case 2:, case 3: zip not supported yet..
@@ -307,7 +304,7 @@ class Image_Helper_PSDReader extends Image_Helper_Abstract implements Image_Plug
         return $output;
     }
 
-    private function _getInteger($byteCount=1) {
+    private function _getInteger($byteCount = 1) {
         switch ($byteCount) {
             case 4:
                 // for some strange reason this is still broken...

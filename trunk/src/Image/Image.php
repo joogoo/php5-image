@@ -67,17 +67,21 @@
 class Image_Image {
 
     public $image;
+    
+    public $mid_handle = true; //Set as false to use the top left corner as the handle.
 
-    protected $settings = array();
+    protected $_settings = array();
 
-    protected $attachments = array();
+    protected $_attachments = array();
 
-    protected $attachments_stack = array();
+    protected $_attachments_stack = array();
+    
+    protected $_reader;
 
     public function __construct()
     {
         $this->_detectGD();
-        $this->mid_handle = true; //Set as false to use the top left corner as the handle.
+        
         $args = func_get_args();
         
         switch (count($args)) {
@@ -95,22 +99,22 @@ class Image_Image {
     {
         $type = $child->getTypeId();
         
-        if( array_key_exists($type, $this->attachments) ) {
-            $this->attachments[$type] ++;
+        if( array_key_exists($type, $this->_attachments) ) {
+            $this->_attachments[$type] ++;
         }
         else {
-            $this->attachments[$type] = 1;
+            $this->_attachments[$type] = 1;
         }
-        $id = "a_" . $type . "_" . $this->attachments[$type];
-        $this->attachments_stack[$id] = $child;
-        $this->attachments_stack[$id]->attachToOwner($this);
+        $id = "a_" . $type . "_" . $this->_attachments[$type];
+        $this->_attachments_stack[$id] = $child;
+        $this->_attachments_stack[$id]->attachToOwner($this);
         return $id;
     }
 
     public function evaluateFXStack()
     {
-        if(is_array($this->attachments_stack)) {
-            foreach($this->attachments_stack as $id => $attachment) {
+        if(is_array($this->_attachments_stack)) {
+            foreach($this->_attachments_stack as $id => $attachment) {
                 switch ($attachment->getTypeId()) {
                     case "effect":
                         $attachment->generate();
@@ -153,53 +157,11 @@ class Image_Image {
     public function openImage($filename = "")
     {
         if(file_exists($filename)) {
-            $image_data = getimagesize($filename);
-            if($image_data) {
-                switch ($image_data[2]) { // Element 2 refers to the image type
-                    case IMAGETYPE_GIF:
-                        if($this->gd_support_gif) {
-                            $this->image = imagecreatefromgif($filename);
-                            $this->_file_info($filename);
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
-                        break;
-                    case IMAGETYPE_PNG:
-                        if($this->gd_support_png) {
-                            $this->image = imagecreatefrompng($filename);
-                            $this->_file_info($filename);
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
-                        break;
-                    case IMAGETYPE_JPEG:
-                        if($this->gd_support_jpg) {
-                            $this->image = imagecreatefromjpeg($filename);
-                            $this->_file_info($filename);
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
-                        break;
-                    case IMAGETYPE_PSD:
-                        $helper = new Image_Helper_PSDReader($filename);
-                        $this->image = $helper->getImage();
-                        $this->_file_info($filename);
-                        break;
-                    default:
-                        return false;
-                        break;
-                }
-            }
-            else {
-                //getimagesize failed
-                return false;
-            }
+            
+            $this->_reader = new Image_Reader_Default($filename);
+            
+            $this->image = $this->_reader->read($filename);
+            $this->_file_info($filename);
         }
         else {
             //file_exists failed
@@ -435,10 +397,10 @@ class Image_Image {
             return ($this->mid_handle == true) ? floor($this->imagesy() / 2) : 0;
         }
         if(substr($name, 0, 2) == "a_") {
-            return $this->attachments_stack[$name];
+            return $this->_attachments_stack[$name];
         }
-        elseif(array_key_exists($name, $this->settings)) {
-            return $this->settings[$name];
+        elseif(array_key_exists($name, $this->_settings)) {
+            return $this->_settings[$name];
         }
         else {
             return false;
@@ -451,10 +413,10 @@ class Image_Image {
             $this->image = $value;
         }
         elseif(substr($name, 0, 2) == "a_") {
-            $this->attachments_stack[$name] = $value;
+            $this->_attachments_stack[$name] = $value;
         }
         else {
-            $this->settings[$name] = $value;
+            $this->_settings[$name] = $value;
         }
     }
 
