@@ -219,8 +219,8 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
      * @param integer $index   Position of the icon inside ICO
      * @return resource an image resource identifier on success, false on errors.
      */
-    public function getImage($filename, $index = 1) {
-        
+    public function getImage($filename, $index = 0) {
+     
         if (($fp = @fopen($filename, 'rb')) !== false) {
             $data = '';
             while (!feof($fp)) {
@@ -228,7 +228,7 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
             }
             fclose($fp);
         }
-        
+      
         if (! $this->__loadData($data)) {
             return false;
         }
