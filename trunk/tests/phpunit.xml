@@ -4,7 +4,7 @@
 		<log type="coverage-html" target="coverage-report" charset="UTF-8"/>
 	</logging>
 	<testsuites>
-		<testsuite name="Image_Image">
+		<testsuite name="Image Test Suite">
 			<directory suffix=".php">./Image</directory>
 		</testsuite>
 	</testsuites>
