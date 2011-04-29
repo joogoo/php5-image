@@ -45,9 +45,7 @@ require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
-class Image_Analyser extends Image_Plugin_Base implements Image_Plugin_Interface {
-
-    public $type_id = "analysis";
+class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugin_Interface {
 
     public $sub_type_id = "analyser";
 

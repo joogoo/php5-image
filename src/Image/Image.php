@@ -79,13 +79,15 @@ class Image_Image {
         $this->_detectGD();
         $this->mid_handle = true; //Set as false to use the top left corner as the handle.
         $args = func_get_args();
-        if(count($args) == 1) {
-            if(! empty($args[0])) {
-                $this->openImage($args[0]);
-            }
-        }
-        elseif(count($args) == 2) {
-            $this->createImageTrueColor($args[0], $args[1]);
+        
+        switch (count($args)) {
+            case 1:
+                if(! empty($args[0]))
+                    $this->openImage($args[0]);
+                break;
+            case 2:
+                $this->createImageTrueColor($args[0], $args[1]);
+                break;
         }
     }
 
@@ -183,6 +185,11 @@ class Image_Image {
                         else {
                             return false;
                         }
+                        break;
+                    case IMAGETYPE_PSD:
+                        $helper = new Image_Helper_PSDReader($filename);
+                        $this->image = $helper->getImage();
+                        $this->_file_info($filename);
                         break;
                     default:
                         return false;
@@ -468,6 +475,7 @@ class Image_Image {
         $ext = array(
             'B', 'KB', 'MB', 'GB'
         );
+        
         $round = 2;
         $this->filepath = $filename;
         $this->filename = basename($filename);
@@ -483,12 +491,13 @@ class Image_Image {
 
     private function _blankpng()
     {
-        $c = "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m";
-        $c .= "dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBNCg";
-        $c .= "dyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAAN";
-        $c .= "egcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQ";
-        $c .= "oHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAA";
-        $c .= "DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=";
-        return $c;
+        return <<<BLACKPNG
+iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
+dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBNCg
+dyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAAN
+egcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQ
+oHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAA
+DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=
+BLACKPNG;
     }
 }
