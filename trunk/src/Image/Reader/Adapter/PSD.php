@@ -101,6 +101,12 @@ class Image_Reader_Adapter_PSD  extends Image_Reader_Abstract {
         }
     }
 
+    /**
+     * Return an image resource from file or URL
+     * 
+     * @param string $filename
+     * @return resource an image resource identifier on success, false on errors.
+     */
     public function getImage($filename) {
         
         $this->_init($filename);

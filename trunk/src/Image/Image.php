@@ -48,7 +48,6 @@
  * 
  * Sample usage:
  *
- * ==============================================================
  * $tmp_name = $_FILES['image_upload']['tmp_name'];
  * $image = new Image_Image($tmp_name);
  * 
@@ -60,7 +59,6 @@
  * $image->attach(new Image_Fx_Crop(0,160));
  * 
  * $image->imagePng("thumbnail.png");
- * ==============================================================
  *
  *
  */
@@ -80,7 +78,6 @@ class Image_Image {
 
     public function __construct()
     {
-        $this->_detectGD();
         
         $args = func_get_args();
         
@@ -168,91 +165,27 @@ class Image_Image {
             return false;
         }
     }
-
-    public function sendHeader($image_format = IMAGETYPE_PNG)
-    {
-
-        switch ($image_format) {
-            case IMAGETYPE_GIF:
-                header("Content-type: image/gif");
-                return true;
-                break;
-            case IMAGETYPE_PNG:
-                header("Content-type: image/png");
-                return true;
-                break;
-            case IMAGETYPE_JPEG:
-                header("Content-type: image/jpeg");
-                return true;
-                break;
-            default:
-                return false;
-        }
-    }
-
-    public function imageGif($filename = "")
+    
+    public function printImage($type, $filename = "")
     {
         if(! isset($this->image)) {
             return false;
         }
         $this->evaluateFXStack();
-        if($this->gd_support_gif) {
-            if(! empty($filename)) {
-                return imagegif($this->image, $filename);
+        
+        $gd_function = 'image'. strtolower($type);
+        if (function_exists($gd_function)) {
+            if(! empty($filename)) {     
+                return call_user_func($gd_function, $this->image, $filename);
             }
             else {
-                if($this->sendHeader(IMAGETYPE_GIF)) {
-                    return imagegif($this->image);
-                }
+                header("Content-type: " . image_type_to_mime_type(constant('IMAGETYPE_' . strtoupper($type))));
+                return call_user_func($gd_function, $this->image);
             }
         }
-        else {
-            return false;
-        }
+    
     }
 
-    public function imagePng($filename = "")
-    {
-        if(! isset($this->image)) {
-            return false;
-        }
-        $this->evaluateFXStack();
-        if($this->gd_support_png) {
-            
-            if(! empty($filename)) {
-                return imagepng($this->image, $filename);
-            }
-            else {
-                if($this->sendHeader(IMAGETYPE_PNG)) {
-                    return imagepng($this->image);
-                }
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
-    public function imageJpeg($filename = "", $quality = 80)
-    {
-        if(! isset($this->image)) {
-            return false;
-        }
-        $this->evaluateFXStack();
-        if($this->gd_support_jpg) {
-            if(! empty($filename)) {
-                return imagejpeg($this->image, $filename, $quality);
-            }
-            else {
-                if($this->sendHeader(IMAGETYPE_JPEG)) {
-                    return imagejpeg($this->image, "", $quality);
-                }
-            }
-        }
-        else {
-            return false;
-        }
-    }
 
     public function destroyImage()
     {
@@ -419,17 +352,13 @@ class Image_Image {
             $this->_settings[$name] = $value;
         }
     }
-
-    private function _detectGD()
+    
+    public function __call($name, $arguments) 
     {
-        $this->gd_info = gd_info();
-
-        preg_match('/\d+/', $this->gd_info['GD Version'], $match);
-        $this->gd_version = $match[0];
-        $this->gd_support_gif = $this->gd_info['GIF Create Support'];
-        $this->gd_support_png = $this->gd_info['PNG Support'];
-        $this->gd_support_jpg = (key_exists('JPG Support', $this->gd_info)) ? $this->gd_info['JPG Support'] : $this->gd_info['JPEG Support'];
-        $this->gd_support_ttf = $this->gd_info['FreeType Support'];
+        if(substr($name, 0, 5) == 'image') {
+            return $this->printImage(substr($name, 5, strlen($name)-5), 
+                    empty($arguments)?'':$arguments[0]);
+        }
     }
 
     private function _file_info($filename)
