@@ -213,11 +213,11 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
     }
 
     /**
-     * Return an image resource with the icon stored
-     * on the $index position of the ICO file
-     *
-     * @param   integer    $index   Position of the icon inside ICO
-     * @return  resource            Image resource
+     * Return an image resource from file or URL
+     * 
+     * @param string $filename
+     * @param integer $index   Position of the icon inside ICO
+     * @return resource an image resource identifier on success, false on errors.
      */
     public function getImage($filename, $index = 1) {
         
