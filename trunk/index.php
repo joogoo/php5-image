@@ -107,6 +107,11 @@
             echo "<div class=\"thumb\"><img src=\"samples/ico.php\"></div>";
             echo "<div class=\"caption\">ICO Parser</div>";
         echo "</div>";
+
+        echo "<div class=\"thumbHolder\" style=\"background: #FFFFFF\">";
+            echo "<div class=\"thumb\"><img src=\"samples/qrcode.php\"></div>";
+            echo "<div class=\"caption\">QR Code</div>";
+        echo "</div>";
         
     echo "</div>";
     
