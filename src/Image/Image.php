@@ -104,17 +104,17 @@ class Image_Image {
         return true;
     }
 
-    public function createImage($x = 100, $y = 100, $color = "FFFFFF")
+    public function createImage($width = 100, $height = 100, $color = "FFFFFF")
     {
-        $this->image = imagecreate($x, $y);
+        $this->image = imagecreate($width, $height);
         if(! empty($color)) {
             $this->imagefill(0, 0, $color);
         }
     }
 
-    public function createImageTrueColor($x = 100, $y = 100, $color = "FFFFFF")
+    public function createImageTrueColor($width = 100, $height = 100, $color = "FFFFFF")
     {
-        $this->image = imagecreatetruecolor($x, $y);
+        $this->image = imagecreatetruecolor($width, $height);
         if(! empty($color)) {
             $this->imagefill(0, 0, $color);
         }
