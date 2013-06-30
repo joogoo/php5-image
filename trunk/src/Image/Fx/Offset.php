@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-offset
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,39 +49,33 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Offset extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "offset";
-
-    public $version = 1.0;
-
-    public function __construct($offset_x = 0, $offset_y = 0)
-    {
+    public function __construct($offset_x = 0, $offset_y = 0) {
         $this->offset_x = $offset_x;
         $this->offset_y = $offset_y;
     }
 
-    public function setOffset($offset_x = 0, $offset_y = 0)
-    {
+    public function setOffset($offset_x = 0, $offset_y = 0) {
         $this->offset_x = $offset_x;
         $this->offset_y = $offset_y;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
         $temp = new Image_Image();
         $temp->createImageTrueColor($width, $height);
         imagecopy($temp->image, $this->_owner->image, $this->offset_x, $this->offset_y, 0, 0, $width -
-         $this->offset_x, $height - $this->offset_y);
+                $this->offset_x, $height - $this->offset_y);
         imagecopy($temp->image, $this->_owner->image, 0, 0, $width - $this->offset_x, $height -
-         $this->offset_y, $this->offset_x, $this->offset_y);
+                $this->offset_y, $this->offset_x, $this->offset_y);
         imagecopy($temp->image, $this->_owner->image, 0, $this->offset_y, $width - $this->offset_x, 0, $this->offset_x, $height -
-         $this->offset_y);
+                $this->offset_y);
         imagecopy($temp->image, $this->_owner->image, $this->offset_x, 0, 0, $height - $this->offset_y, $width -
-         $this->offset_x, $this->offset_y);
+                $this->offset_x, $this->offset_y);
         $this->_owner->image = $temp->image;
         unset($temp);
         return true;
     }
+
 }

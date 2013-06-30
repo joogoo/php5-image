@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-canvassize
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,12 +49,7 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Canvassize extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "canvassize";
-
-    public $version = 1.0;
-
-    public function __construct($t = 10, $r = 10, $b = 10, $l = 10, $color = "")
-    {
+    public function __construct($t = 10, $r = 10, $b = 10, $l = 10, $color = "") {
         $this->t = $t;
         $this->r = $r;
         $this->b = $b;
@@ -62,25 +57,24 @@ class Image_Fx_Canvassize extends Image_Fx_Abstract implements Image_Plugin_Inte
         $this->color = $color;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
         $temp = new Image_Image();
-        if(! empty($this->color)) {
+        if (!empty($this->color)) {
             $temp->createImageTrueColor($width + ($this->r + $this->l), $height +
-             ($this->t + $this->b));
+                    ($this->t + $this->b));
             $arrColor = Image_Image::hexColorToArrayColor($this->color);
             $tempcolor = imagecolorallocate($temp->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
             imagefilledrectangle($temp->image, 0, 0, $temp->imagesx(), $temp->imagesy(), $tempcolor);
-        }
-        else {
+        } else {
             $temp->createImageTrueColorTransparent($width + ($this->r + $this->l), $height +
-             ($this->t + $this->b));
+                    ($this->t + $this->b));
         }
         imagecopy($temp->image, $this->_owner->image, $this->l, $this->t, 0, 0, $width, $height);
         $this->_owner->image = $temp->image;
         unset($temp);
         return true;
     }
+
 }

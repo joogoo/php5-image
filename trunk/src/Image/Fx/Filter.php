@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-filter
  *
@@ -40,27 +41,20 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Filter extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "filter";
-
-    public $version = 1.0;
-
-    public function __construct($filter = IMG_FILTER_NEGATE, $arg1 = 0, $arg2 = 0, $arg3 = 0, $arg4 = 0)
-    {
+    public function __construct($filter = IMG_FILTER_NEGATE, $arg1 = 0, $arg2 = 0, $arg3 = 0, $arg4 = 0) {
         $this->filter = $filter;
         $this->arg1 = $arg1;
         $this->arg2 = $arg2;
         $this->arg3 = $arg3;
     }
 
-    public function generate()
-    {
+    public function generate() {
         switch ($this->filter) {
             case IMG_FILTER_NEGATE:
                 imagefilter($this->_owner->image, IMG_FILTER_NEGATE);
@@ -100,4 +94,5 @@ class Image_Fx_Filter extends Image_Fx_Abstract implements Image_Plugin_Interfac
                 break;
         }
     }
+
 }

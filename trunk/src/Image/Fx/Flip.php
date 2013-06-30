@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-flip
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,46 +49,40 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Flip extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "flip";
-
-    public $version = 1.0;
-
-    public function __construct($flip_x = true, $flip_y = false)
-    {
+    public function __construct($flip_x = true, $flip_y = false) {
         $this->flip_x = $flip_x;
         $this->flip_y = $flip_y;
     }
 
-    public function setFlip($flip_x = true, $flip_y = false)
-    {
+    public function setFlip($flip_x = true, $flip_y = false) {
         $this->flip_x = $flip_x;
         $this->flip_y = $flip_y;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $src_x = $this->_owner->imagesx();
         $src_y = $this->_owner->imagesy();
         $flip_x = $this->flip_x;
         $flip_y = $this->flip_y;
         $flip = new Image_Image($src_x, $src_y);
-        if($flip_x == true) {
+        if ($flip_x == true) {
             imagecopy($flip->image, $this->_owner->image, 0, 0, 0, 0, $src_x, $src_y);
-            for($x = 0; $x < $src_x; $x ++) {
+            for ($x = 0; $x < $src_x; $x++) {
                 imagecopy($this->_owner->image, $flip->image, $src_x -
-                 $x - 1, 0, $x, 0, 1, $src_y);
+                        $x - 1, 0, $x, 0, 1, $src_y);
             }
         }
-        if($flip_y == true) {
+        if ($flip_y == true) {
             imagecopy($flip->image, $this->_owner->image, 0, 0, 0, 0, $src_x, $src_y);
-            for($y = 0; $y < $src_y; $y ++) {
+            for ($y = 0; $y < $src_y; $y++) {
                 imagecopy($this->_owner->image, $flip->image, 0, $src_y -
-                 $y - 1, 0, $y, $src_x, 1);
+                        $y - 1, 0, $y, $src_x, 1);
             }
         }
         $this->_owner->image = $flip->image;
         unset($flip);
         return true;
     }
+
 }

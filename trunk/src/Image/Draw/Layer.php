@@ -47,9 +47,6 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Layer extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "layer";
-    public $version = 1.0;
-
     public function __construct(Image_Image $img = null) {
         $this->img = $img;
     }

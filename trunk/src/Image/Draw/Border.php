@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-draw-border
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,37 +49,28 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Border extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "border";
-
-    public $version = 1.0;
-
-    public function __construct($padding = 10, $color = "000000")
-    {
+    public function __construct($padding = 10, $color = "000000") {
         $this->padding = $padding;
         $this->color = $color;
     }
 
-    public function setBorder($padding = 10, $color = "000000")
-    {
+    public function setBorder($padding = 10, $color = "000000") {
         $this->padding = $padding;
         $this->color = $color;
         return $this;
     }
 
-    public function setPadding($padding = 10)
-    {
+    public function setPadding($padding = 10) {
         $this->padding = $padding;
         return $this;
     }
 
-    public function setColor($color = "000000")
-    {
+    public function setColor($color = "000000") {
         $this->color = $color;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
         $padding = $this->padding;
@@ -93,4 +84,5 @@ class Image_Draw_Border extends Image_Draw_Abstract implements Image_Plugin_Inte
         unset($temp);
         return true;
     }
+
 }

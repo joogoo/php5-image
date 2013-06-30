@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-reader-adapter-ico
  *
@@ -41,16 +42,11 @@
  * @since     File available since Release 1.0.0
  */
 
-
 /**
  * Open ICO files and extract any size/depth to PNG format
-*/
+ */
+class Image_Reader_Adapter_ICO extends Image_Reader_Abstract {
 
-class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
-
-        
-    public $version = 1.0;
-    
     /**
      * Background color on icon extraction
      *
@@ -58,7 +54,7 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
      * @var  public
      */
     private $__bgcolor = array(255, 255, 255);
-    
+
     /**
      * Is background color transparent?
      *
@@ -66,7 +62,6 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
      * @var  public
      */
     private $__bgcolor_transparent = true;
-
 
     /**
      * Load an ICO data. If you prefer to open the file
@@ -220,7 +215,7 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
      * @return resource an image resource identifier on success, false on errors.
      */
     public function getImage($filename, $index = 0) {
-     
+
         if (($fp = @fopen($filename, 'rb')) !== false) {
             $data = '';
             while (!feof($fp)) {
@@ -228,8 +223,8 @@ class Image_Reader_Adapter_ICO  extends Image_Reader_Abstract {
             }
             fclose($fp);
         }
-      
-        if (! $this->__loadData($data)) {
+
+        if (!$this->__loadData($data)) {
             return false;
         }
 

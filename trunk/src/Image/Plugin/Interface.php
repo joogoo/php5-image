@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-plugin-interface
  *
@@ -40,17 +41,11 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
-
 interface Image_Plugin_Interface {
-    
+
     public function attachToOwner($owner);
 
     public function getTypeId();
-
-    public function getSubTypeId();
-
-    public function getVersion();
 
     public function generate();
 }
