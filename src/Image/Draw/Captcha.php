@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-draw-captcha
  *
@@ -40,21 +41,15 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "captcha";
-
-    public $version = 1.0;
-
     private $arr_ttf_font = array();
 
-    public function __construct($password = "")
-    {
+    public function __construct($password = "") {
         $this->password = $password;
         $this->text_size = 15;
         $this->text_size_random = 0;
@@ -62,43 +57,36 @@ class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Int
         $this->text_spacing = 5;
     }
 
-    public function addTTFFont($font = "")
-    {
-        if(file_exists($font)) {
+    public function addTTFFont($font = "") {
+        if (file_exists($font)) {
             $this->arr_ttf_font[] = $font;
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
-    
-    public function setTextSize($size)
-    {
+
+    public function setTextSize($size) {
         $this->text_size = $size;
         return $this;
     }
-    
-    public function setTextSpacing($spacing)
-    {
+
+    public function setTextSpacing($spacing) {
         $this->text_spacing = $spacing;
         return $this;
     }
-    
-    public function setSizeRandom($size_random)
-    {
+
+    public function setSizeRandom($size_random) {
         $this->text_size_random = $size_random;
         return $this;
     }
-    
-    public function setAngleRandom($angle_random)
-    {
+
+    public function setAngleRandom($angle_random) {
         $this->text_angle_random = $angle_random;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         imagesavealpha($this->_owner->image, true);
         imagealphablending($this->_owner->image, true);
         $width = $this->_owner->imagesx();
@@ -106,7 +94,7 @@ class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Int
         $white = imagecolorallocate($this->_owner->image, 0, 0, 0);
         $l = array();
         $total_width = 0;
-        for($x = 0; $x < strlen($this->password); $x ++) {
+        for ($x = 0; $x < strlen($this->password); $x++) {
             $l[$x]['text'] = $this->password[$x];
             $l[$x]['font'] = $this->arr_ttf_font[rand(0, count($this->arr_ttf_font) - 1)];
             $l[$x]['size'] = rand($this->text_size, $this->text_size + $this->text_size_random);
@@ -119,11 +107,12 @@ class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Int
         $x_offset = ($width - $total_width) / 2;
         $x_pos = 0;
         $y_pos = 0;
-        foreach($l as $p => $ld) {
+        foreach ($l as $p => $ld) {
             $y_pos = ($height + $ld['height']) / 2;
             imagettftext($this->_owner->image, $ld['size'], $ld['angle'], $x_offset +
-             $x_pos, $y_pos, $white, $ld['font'], $ld['text']);
+                    $x_pos, $y_pos, $white, $ld['font'], $ld['text']);
             $x_pos += $ld['width'];
         }
     }
+
 }

@@ -73,7 +73,7 @@ class Image_Image {
         } else {
             $this->_attachments[$type] = 1;
         }
-        $id = "#" . $type . "_" . $this->_attachments[$type];
+        $id = "a_" . $type . "_" . $this->_attachments[$type];
         $this->_attachments_stack[$id] = $child;
         $this->_attachments_stack[$id]->attachToOwner($this);
         return $id;

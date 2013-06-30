@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-gaussian
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,23 +49,16 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "gaussian";
-
-    public $version = 1.0;
-
-    public function __construct($matrix = array(1, 4, 8, 16, 8, 4, 1))
-    {
+    public function __construct($matrix = array(1, 4, 8, 16, 8, 4, 1)) {
         $this->matrix = $matrix;
     }
-    
-    public function setMatrix(Array $matrix)
-    {
+
+    public function setMatrix(Array $matrix) {
         $this->matrix = $matrix;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
         $matrix = $this->matrix;
@@ -73,8 +66,8 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
         $matrix_sum = array_sum($matrix);
         $c = 0;
         $m_offset = floor($matrix_width / 2);
-        for($y = 0; $y < $height; $y ++) {
-            for($x = 0; $x < $width; $x ++) {
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $t = $this->_owner->imagecolorat($x, $y);
                 $t1 = Image_Image::intColorToArrayColor($t);
                 $p[$x][$y]['r'] = $t1['red'];
@@ -91,23 +84,23 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
         $temp->createImageTrueColorTransparent($width, $height);
         imagesavealpha($temp->image, true);
         imagealphablending($temp->image, true);
-        for($i = $m_offset; $i < $width - $m_offset; $i ++) {
-            for($j = $m_offset; $j < $height - $m_offset; $j ++) {
+        for ($i = $m_offset; $i < $width - $m_offset; $i++) {
+            for ($j = $m_offset; $j < $height - $m_offset; $j++) {
                 $sumr = 0;
                 $sumg = 0;
                 $sumb = 0;
                 $suma = 0;
-                for($k = 0; $k < $matrix_width; $k ++) {
+                for ($k = 0; $k < $matrix_width; $k++) {
                     $xx = $i - (($matrix_width) >>
-                     1) + $k;
+                            1) + $k;
                     $sumr += $p[$xx][$j]['r'] *
-                     $matrix[$k];
+                            $matrix[$k];
                     $sumg += $p[$xx][$j]['g'] *
-                     $matrix[$k];
+                            $matrix[$k];
                     $sumb += $p[$xx][$j]['b'] *
-                     $matrix[$k];
+                            $matrix[$k];
                     $suma += $p[$xx][$j]['a'] *
-                     $matrix[$k];
+                            $matrix[$k];
                 }
                 $p1[$i][$j]['r'] = $sumr / $matrix_sum;
                 $p1[$i][$j]['g'] = $sumg / $matrix_sum;
@@ -115,27 +108,27 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
                 $p1[$i][$j]['a'] = $suma / $matrix_sum;
             }
         }
-        for($i = $m_offset; $i < $width - $m_offset; $i ++) {
-            for($j = $m_offset; $j < $height - $m_offset; $j ++) {
+        for ($i = $m_offset; $i < $width - $m_offset; $i++) {
+            for ($j = $m_offset; $j < $height - $m_offset; $j++) {
                 $sumr = 0;
                 $sumg = 0;
                 $sumb = 0;
                 $suma = 0;
-                for($k = 0; $k < $matrix_width; $k ++) {
+                for ($k = 0; $k < $matrix_width; $k++) {
                     $xy = $j - (($matrix_width) >>
-                     1) + $k;
+                            1) + $k;
                     $sumr += $p1[$i][$xy]['r'] *
-                     $matrix[$k];
+                            $matrix[$k];
                     $sumg += $p1[$i][$xy]['g'] *
-                     $matrix[$k];
+                            $matrix[$k];
                     $sumb += $p1[$i][$xy]['b'] *
-                     $matrix[$k];
+                            $matrix[$k];
                     $suma += $p1[$i][$xy]['a'] *
-                     $matrix[$k];
+                            $matrix[$k];
                 }
                 $col = imagecolorallocatealpha($temp->image, ($sumr /
-                 $matrix_sum), ($sumg / $matrix_sum), ($sumb /
-                 $matrix_sum), ($suma / $matrix_sum));
+                        $matrix_sum), ($sumg / $matrix_sum), ($sumb /
+                        $matrix_sum), ($suma / $matrix_sum));
                 imagesetpixel($temp->image, $i, $j, $col);
             }
         }
@@ -143,4 +136,5 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
         unset($temp);
         return true;
     }
+
 }

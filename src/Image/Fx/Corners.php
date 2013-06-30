@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-corners
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,25 +49,18 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "corners";
-
-    public $version = 1.0;
-
-    public function __construct($radius_x = 0, $radius_y = 0)
-    {
+    public function __construct($radius_x = 0, $radius_y = 0) {
         $this->radius_x = $radius_x;
         $this->radius_y = $radius_y;
     }
 
-    public function setRadius($x = 10, $y = 10)
-    {
+    public function setRadius($x = 10, $y = 10) {
         $this->radius_x = $x;
         $this->radius_y = $y;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         imagesavealpha($this->_owner->image, true);
         imagealphablending($this->_owner->image, false);
         $image_x = $this->_owner->imagesx();
@@ -78,9 +71,9 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
         imagecopyresampled($corner->image, $gdCorner, 0, 0, 0, 0, $this->radius_x, $this->radius_y, imagesx($gdCorner), imagesy($gdCorner));
         $corner_x = $this->radius_x - 1;
         $corner_y = $this->radius_y - 1;
-        for($y = 0; $y < $corner_y; $y ++) {
-            for($x = 0; $x < $corner_x; $x ++) {
-                for($c = 0; $c < 4; $c ++) {
+        for ($y = 0; $y < $corner_y; $y++) {
+            for ($x = 0; $x < $corner_x; $x++) {
+                for ($c = 0; $c < 4; $c++) {
                     switch ($c) {
                         case 0:
                             $xo = 0;
@@ -90,33 +83,33 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
                             break;
                         case 1:
                             $xo = ($image_x -
-                             $corner_x);
+                                    $corner_x);
                             $yo = 0;
                             $cxo = $corner_x -
-                             $x;
+                                    $x;
                             $cyo = $y;
                             break;
                         case 2:
                             $xo = ($image_x -
-                             $corner_x);
+                                    $corner_x);
                             $yo = ($image_y -
-                             $corner_y);
+                                    $corner_y);
                             $cxo = $corner_x -
-                             $x;
+                                    $x;
                             $cyo = $corner_y -
-                             $y;
+                                    $y;
                             break;
                         case 3:
                             $xo = 0;
                             $yo = ($image_y -
-                             $corner_y);
+                                    $corner_y);
                             $cxo = $x;
                             $cyo = $corner_y -
-                             $y;
+                                    $y;
                             break;
                     }
                     $irgb = imagecolorat($this->_owner->image, $xo +
-                     $x, $yo + $y);
+                            $x, $yo + $y);
                     $r = ($irgb >> 16) & 0xFF;
                     $g = ($irgb >> 8) & 0xFF;
                     $b = $irgb & 0xFF;
@@ -129,16 +122,16 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
                             break;
                         case 1:
                             imagesetpixel($this->_owner->image, $xo +
-                             $x, $y, $colour);
+                                    $x, $y, $colour);
                             break;
                         case 2:
                             imagesetpixel($this->_owner->image, $xo +
-                             $x, $yo +
-                             $y, $colour);
+                                    $x, $yo +
+                                    $y, $colour);
                             break;
                         case 3:
                             imagesetpixel($this->_owner->image, $x, $yo +
-                             $y, $colour);
+                                    $y, $colour);
                             break;
                     }
                 }
@@ -146,8 +139,7 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
         }
     }
 
-    private function _cornerpng()
-    {
+    private function _cornerpng() {
         $c = "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m";
         $c .= "dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAH2SURBVHjaYvz//z/DQAFGRkZNIAXCakCsBMSyQCwJ";
         $c .= "xCJAzA/EnAABxEJnB8kDKWsgtgBiMyA2AmJWfHoAAoiFDo4ChYQ7ELsBsTMQK5CiHyCAWGjoMBUgFQDE";
@@ -161,5 +153,6 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
         $c .= "AAAAAElFTkSuQmCC";
         return $c;
     }
+
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-vignette
  *
@@ -40,32 +41,25 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Vignette extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "vignette";
-
-    public $version = 1.0;
-
-    public function __construct(Image_Image $vignette = NULL)
-    {
+    public function __construct(Image_Image $vignette = NULL) {
         $this->vignette = $vignette;
     }
 
-    public function generate()
-    {
+    public function generate() {
         imagesavealpha($this->_owner->image, true);
         imagealphablending($this->_owner->image, false);
         $image_x = $this->_owner->imagesx();
         $image_y = $this->_owner->imagesy();
         $vignette_x = $this->vignette->imagesx();
         $vignette_y = $this->vignette->imagesy();
-        for($y = 0; $y < $vignette_y; $y ++) {
-            for($x = 0; $x < $vignette_x; $x ++) {
+        for ($y = 0; $y < $vignette_y; $y++) {
+            for ($x = 0; $x < $vignette_x; $x++) {
                 $irgb = imagecolorat($this->_owner->image, $x, $y);
                 $r = ($irgb >> 16) & 0xFF;
                 $g = ($irgb >> 8) & 0xFF;
@@ -77,5 +71,6 @@ class Image_Fx_Vignette extends Image_Fx_Abstract implements Image_Plugin_Interf
             }
         }
     }
+
 }
 

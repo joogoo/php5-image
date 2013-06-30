@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-ripple
  *
@@ -40,45 +41,37 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Ripple extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "ripple";
-
-    public $version = 1.0;
-
-    public function __construct($frequency = 3, $amplitude = 4, $wrap_around = true)
-    {
+    public function __construct($frequency = 3, $amplitude = 4, $wrap_around = true) {
         $this->frequency = $frequency;
         $this->amplitude = $amplitude;
         $this->wrap_around = $wrap_around;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
-        for($y = 0; $y < $height; $y ++) {
-            for($x = 0; $x < $width; $x ++) {
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $dis_x = $x + (sin(deg2rad(($y / $height) *
-                 360) * $this->frequency) * $this->amplitude);
+                                        360) * $this->frequency) * $this->amplitude);
                 $dis_y = $y + (sin(deg2rad(($x / $width) *
-                 360) * $this->frequency) * $this->amplitude);
-                if($this->wrap_around == true) {
+                                        360) * $this->frequency) * $this->amplitude);
+                if ($this->wrap_around == true) {
                     $dis_x = ($dis_x < 0) ? $dis_x +
-                     $width : $dis_x;
+                            $width : $dis_x;
                     $dis_x = ($dis_x >= $width) ? $dis_x -
-                     $width : $dis_x;
+                            $width : $dis_x;
                     $dis_y = ($dis_y < 0) ? $dis_y +
-                     $height : $dis_y;
+                            $height : $dis_y;
                     $dis_y = ($dis_y >= $height) ? $dis_y -
-                     $height : $dis_y;
-                }
-                else {
+                            $height : $dis_y;
+                } else {
                     $dis_x = ($dis_x < 0) ? 0 : $dis_x;
                     $dis_x = ($dis_x > $width) ? $width : $dis_x;
                     $dis_y = ($dis_y < 0) ? 0 : $dis_y;
@@ -91,4 +84,5 @@ class Image_Fx_Ripple extends Image_Fx_Abstract implements Image_Plugin_Interfac
         $this->_owner->displace($displacement);
         return true;
     }
+
 }

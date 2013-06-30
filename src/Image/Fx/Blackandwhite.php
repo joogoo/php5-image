@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-blackandwhite
  *
@@ -40,37 +41,29 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Blackandwhite extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "blackandwhite";
-
-    public $version = 1.0;
-
-    public function __construct($algorithm = "YIQ")
-    {
+    public function __construct($algorithm = "YIQ") {
         $this->algorithm = $algorithm;
     }
 
-    public function setAlgorithm($algorithm = "YIQ")
-    {
+    public function setAlgorithm($algorithm = "YIQ") {
         $this->algorithm = $algorithm;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
-        for($x = 0; $x < 256; $x ++) {
+        for ($x = 0; $x < 256; $x++) {
             $palette[$x] = imagecolorallocate($this->_owner->image, $x, $x, $x);
         }
-        for($x = 0; $x < $width; $x ++) {
-            for($y = 0; $y < $height; $y ++) {
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
                 $rgb = $this->_owner->imageColorAt($x, $y);
                 $r = ($rgb >> 16) & 0xFF;
                 $g = ($rgb >> 8) & 0xFF;
@@ -90,17 +83,17 @@ class Image_Fx_Blackandwhite extends Image_Fx_Abstract implements Image_Plugin_I
                         break;
                     case "avg":
                         $val = ($r +
-                         $g +
-                         $b) /
-                         3;
+                                $g +
+                                $b) /
+                                3;
                         break;
                     default:
                         $val = (($r *
-                         0.299) +
-                         ($g *
-                         0.587) +
-                         ($b *
-                         0.114));
+                                0.299) +
+                                ($g *
+                                0.587) +
+                                ($b *
+                                0.114));
                         break;
                 }
                 imagesetpixel($this->_owner->image, $x, $y, $palette[$val]);
@@ -108,4 +101,5 @@ class Image_Fx_Blackandwhite extends Image_Fx_Abstract implements Image_Plugin_I
         }
         return true;
     }
+
 }

@@ -1,4 +1,5 @@
 <?
+
 /**
  * image-helper-adapter-psd
  *
@@ -40,20 +41,12 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
+class Image_Reader_Adapter_PSD extends Image_Reader_Abstract {
 
-
-class Image_Reader_Adapter_PSD  extends Image_Reader_Abstract {
-    
-    public $version = 1.0;
-    
     public $infoArray;
-    
     public $fp;
-    
     public $fileName;
-    
     public $tempFileName;
-    
     public $colorBytesLength;
 
     private function _init($filename) {
@@ -108,9 +101,9 @@ class Image_Reader_Adapter_PSD  extends Image_Reader_Abstract {
      * @return resource an image resource identifier on success, false on errors.
      */
     public function getImage($filename) {
-        
+
         $this->_init($filename);
-        
+
         // decompress image data if required
         switch ($this->infoArray['compressionType']) {
             // case 2:, case 3: zip not supported yet..
@@ -270,7 +263,7 @@ class Image_Reader_Adapter_PSD  extends Image_Reader_Abstract {
         }
     }
 
-    private function _unsignedToSigned($int, $byteSize=1) {
+    private function _unsignedToSigned($int, $byteSize = 1) {
         switch ($byteSize) {
             case 1:
                 if ($int < 128)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-draw-watermark
  *
@@ -40,31 +41,24 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Watermark extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "watermark";
-
-    public $version = 1.0;
-
-    public function __construct(Image_Image $watermark = NULL, $position = "br")
-    {
+    public function __construct(Image_Image $watermark = NULL, $position = "br") {
         $this->watermark = $watermark;
         $this->position = $position;
     }
 
-    public function setPosition()
-    {
+    public function setPosition() {
         $args = func_get_args();
         switch (count($args)) {
             case 1:
                 $this->position = $args[0];
                 break;
-            
+
             case 2:
                 $this->position = "user";
                 $this->position_x = $args[0];
@@ -73,8 +67,7 @@ class Image_Draw_Watermark extends Image_Draw_Abstract implements Image_Plugin_I
         }
     }
 
-    public function generate()
-    {
+    public function generate() {
         imagesavealpha($this->_owner->image, true);
         imagealphablending($this->_owner->image, true);
         imagesavealpha($this->watermark->image, false);
@@ -129,13 +122,13 @@ class Image_Draw_Watermark extends Image_Draw_Abstract implements Image_Plugin_I
                 $y = 0;
                 break;
         }
-        if($this->position != "tile") {
+        if ($this->position != "tile") {
             imagecopy($this->_owner->image, $this->watermark->image, $x, $y, 0, 0, $watermark_width, $watermark_height);
-        }
-        else {
+        } else {
             imagesettile($this->_owner->image, $this->watermark->image);
             imagefilledrectangle($this->_owner->image, 0, 0, $width, $height, IMG_COLOR_TILED);
         }
         return true;
     }
+
 }

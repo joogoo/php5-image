@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-analyser
  *
@@ -40,40 +41,25 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "analyser";
-
-    public $version = 1.0;
-
     private $__count_colours = array();
-
     private $__count_a = array();
-
     private $__count_r = array();
-
     private $__count_g = array();
-
     private $__count_b = array();
-
     private $__count_hue = array();
-
     private $__count_saturation = array();
-
     private $__count_brightness = array();
-
     private $__analyse_complete = false;
-
     private $__analyse_HSB_complete = false;
 
-    public function __construct()
-    {
-        for($x = 0; $x < 255; $x ++) {
+    public function __construct() {
+        for ($x = 0; $x < 255; $x++) {
             $this->__count_a[$x] = 0;
             $this->__count_r[$x] = 0;
             $this->__count_g[$x] = 0;
@@ -81,22 +67,22 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         }
     }
 
-    public function generate(){}
+    public function generate() {
+        
+    }
 
-    public function countColors($channel = "all")
-    {
-        if(! isset($this->_owner->image)) {
+    public function countColors($channel = "all") {
+        if (!isset($this->_owner->image)) {
             return false;
         }
-        if(! $this->__analyse_complete) {
+        if (!$this->__analyse_complete) {
             $this->_analyse();
         }
         return count($this->__count_colours);
     }
 
-    public function averageChannel($channel = "all")
-    {
-        if(! isset($this->_owner->image)) {
+    public function averageChannel($channel = "all") {
+        if (!isset($this->_owner->image)) {
             return false;
         }
         $this->_analyse();
@@ -123,12 +109,11 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         }
     }
 
-    public function minChannel($channel = "all")
-    {
-        if(! isset($this->_owner->image)) {
+    public function minChannel($channel = "all") {
+        if (!isset($this->_owner->image)) {
             return false;
         }
-        if(! $this->__analyse_complete) {
+        if (!$this->__analyse_complete) {
             $this->_analyse();
         }
         switch ($channel) {
@@ -154,12 +139,11 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         }
     }
 
-    public function maxChannel($channel = "all")
-    {
-        if(! isset($this->_owner->image)) {
+    public function maxChannel($channel = "all") {
+        if (!isset($this->_owner->image)) {
             return false;
         }
-        if(! $this->__analyse_complete) {
+        if (!$this->__analyse_complete) {
             $this->_analyse();
         }
         switch ($channel) {
@@ -185,9 +169,8 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         }
     }
 
-    public function hue($x, $y)
-    {
-        if(! isset($this->_owner->image)) {
+    public function hue($x, $y) {
+        if (!isset($this->_owner->image)) {
             return false;
         }
         $color = $this->_owner->imageColorAt($x, $y);
@@ -196,9 +179,8 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         return $h;
     }
 
-    public function saturation($x, $y)
-    {
-        if(! isset($this->_owner->image)) {
+    public function saturation($x, $y) {
+        if (!isset($this->_owner->image)) {
             return false;
         }
         $color = $this->_owner->imageColorAt($x, $y);
@@ -207,9 +189,8 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         return $s;
     }
 
-    public function brightness($x, $y)
-    {
-        if(! isset($this->_owner->image)) {
+    public function brightness($x, $y) {
+        if (!isset($this->_owner->image)) {
             return false;
         }
         $color = $this->_owner->imageColorAt($x, $y);
@@ -218,86 +199,79 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         return $b;
     }
 
-    public function imageHue()
-    {
-        if(! $this->__analyse_complete) {
+    public function imageHue() {
+        if (!$this->__analyse_complete) {
             $this->_analyse();
         }
-        if(! $this->__analyse_HSB_complete) {
+        if (!$this->__analyse_HSB_complete) {
             $this->_analyseHSB();
         }
         return $this->_array_max($this->__count_hue);
     }
 
-    public function imageSaturation()
-    {
-        if(! $this->__analyse_complete) {
+    public function imageSaturation() {
+        if (!$this->__analyse_complete) {
             $this->_analyse();
         }
-        if(! $this->__analyse_HSB_complete) {
+        if (!$this->__analyse_HSB_complete) {
             $this->_analyseHSB();
         }
         return $this->_array_max($this->__count_saturation);
     }
 
-    public function imageBrightness()
-    {
-        if(! $this->__analyse_complete) {
+    public function imageBrightness() {
+        if (!$this->__analyse_complete) {
             $this->_analyse();
         }
-        if(! $this->__analyse_HSB_complete) {
+        if (!$this->__analyse_HSB_complete) {
             $this->_analyseHSB();
         }
         return $this->_array_max($this->__count_brightness);
     }
 
-    private function _analyse()
-    {
-        if(! isset($this->_owner->image)) {
+    private function _analyse() {
+        if (!isset($this->_owner->image)) {
             return false;
         }
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
-        for($y = 0; $y < $height; $y ++) {
-            for($x = 0; $x < $width; $x ++) {
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
                 $color = $this->_owner->imageColorAt($x, $y);
                 $arrColor = $this->_owner->intColorToArrayColor($color);
-                $this->__count_colours[$color] ++;
-                $this->__count_a[$arrColor['alpha']] ++;
-                $this->__count_r[$arrColor['red']] ++;
-                $this->__count_g[$arrColor['green']] ++;
-                $this->__count_b[$arrColor['blue']] ++;
+                $this->__count_colours[$color]++;
+                $this->__count_a[$arrColor['alpha']]++;
+                $this->__count_r[$arrColor['red']]++;
+                $this->__count_g[$arrColor['green']]++;
+                $this->__count_b[$arrColor['blue']]++;
             }
         }
         $this->__analyse_complete = true;
     }
 
-    private function _analyseHSB()
-    {
-        foreach($this->__count_colours as $color => $count) {
+    private function _analyseHSB() {
+        foreach ($this->__count_colours as $color => $count) {
             $arrColor = $this->_owner->intColorToArrayColor($color);
             list ($h, $s, $b) = $this->_hsb($arrColor['red'], $arrColor['green'], $arrColor['blue']);
-            $this->__count_hue[$h] ++;
-            $this->__count_saturation[$s] ++;
-            $this->__count_brightness[$b] ++;
+            $this->__count_hue[$h]++;
+            $this->__count_saturation[$s]++;
+            $this->__count_brightness[$b]++;
         }
         $this->__analyse_HSB_complete = true;
     }
 
-    private function _array_avg($array)
-    {
-        foreach($array as $k => $v) {
+    private function _array_avg($array) {
+        foreach ($array as $k => $v) {
             $t += $k * $v;
             $s += $v;
         }
         return round($t / $s);
     }
 
-    private function _array_min($array)
-    {
+    private function _array_min($array) {
         $mv = 256;
-        foreach($array as $k => $v) {
-            if($v < $mv) {
+        foreach ($array as $k => $v) {
+            if ($v < $mv) {
                 $mk = $k;
                 $mv = $v;
             }
@@ -305,11 +279,10 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         return $mk;
     }
 
-    private function _array_max($array)
-    {
+    private function _array_max($array) {
         $mv = 0;
-        foreach($array as $k => $v) {
-            if($v > $mv) {
+        foreach ($array as $k => $v) {
+            if ($v > $mv) {
                 $mk = $k;
                 $mv = $v;
             }
@@ -317,8 +290,7 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         return $mk;
     }
 
-    private function _hsb($r, $g, $b)
-    {
+    private function _hsb($r, $g, $b) {
         $hue = 0.0;
         $saturation = 0.0;
         $brightness = 0.0;
@@ -326,37 +298,33 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
         $max = max($r, $g, $b);
         $delta = ($max - $min);
         $brightness = $max;
-        if($max != 0.0) {
+        if ($max != 0.0) {
             $saturation = $delta / $max;
-        }
-        else {
+        } else {
             $saturation = 0.0;
             $hue = - 1;
         }
-        if($saturation != 0.0) {
-            if($r == $max) {
+        if ($saturation != 0.0) {
+            if ($r == $max) {
                 $hue = ($g - $b) / $delta;
-            }
-            else {
-                if($g == $max) {
+            } else {
+                if ($g == $max) {
                     $hue = 2.0 + ($b - $r) /
-                     $delta;
-                }
-                else {
-                    if($b == $max) {
+                            $delta;
+                } else {
+                    if ($b == $max) {
                         $hue = 4.0 +
-                         ($r -
-                         $g) /
-                         $delta;
+                                ($r -
+                                $g) /
+                                $delta;
                     }
                 }
             }
-        }
-        else {
+        } else {
             $hue = - 1.0;
         }
         $hue = $hue * 60.0;
-        if($hue < 0.0) {
+        if ($hue < 0.0) {
             $hue = $hue + 360.0;
         }
         $saturation = round($saturation * 100);
@@ -365,5 +333,6 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
             $hue, $saturation, $brightness
         );
     }
+
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-draw-infobar
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,13 +49,7 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Infobar extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "info";
-
-    public $version = 1.0;
-
-    public function __construct($info = "[Filename]", $position = "b", $justify = "c",
-        $barcolor = "000000", $textcolor = "FFFFFF")
-    {
+    public function __construct($info = "[Filename]", $position = "b", $justify = "c", $barcolor = "000000", $textcolor = "FFFFFF") {
         $this->info = $info;
         $this->position = $position;
         $this->justify = $justify;
@@ -64,8 +58,7 @@ class Image_Draw_Infobar extends Image_Draw_Abstract implements Image_Plugin_Int
         $this->font = 2;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $src_x = $this->_owner->imagesx();
         $src_y = $this->_owner->imagesy();
         $temp = new Image_Image();
@@ -94,11 +87,11 @@ class Image_Draw_Infobar extends Image_Draw_Abstract implements Image_Plugin_Int
                 break;
             case "c":
                 $text_x = ($src_x - (imagefontwidth($this->font) *
-                 strlen($text))) / 2;
+                        strlen($text))) / 2;
                 break;
             case "r":
                 $text_x = $src_x - 3 - (imagefontwidth($this->font) *
-                 strlen($text));
+                        strlen($text));
                 break;
         }
         //Draw the bar background
@@ -115,4 +108,5 @@ class Image_Draw_Infobar extends Image_Draw_Abstract implements Image_Plugin_Int
         unset($temp);
         return true;
     }
+
 }

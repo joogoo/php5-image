@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-plugin-base
  *
@@ -40,29 +41,16 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
-
 abstract class Image_Plugin_Base {
 
     protected $_owner;
 
-    public function attachToOwner($owner)
-    {
+    public function attachToOwner($owner) {
         $this->_owner = $owner;
     }
 
-    public function getTypeId()
-    {
+    public function getTypeId() {
         return $this->type_id;
     }
 
-    public function getSubTypeId()
-    {
-        return $this->sub_type_id;
-    }
-
-    public function getVersion()
-    {
-        return $this->version;
-    }
 }

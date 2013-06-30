@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-crop
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,39 +49,32 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Crop extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "crop";
-
-    public $version = 1.0;
-
-    public function __construct($crop_x = 0, $crop_y = 0)
-    {
+    public function __construct($crop_x = 0, $crop_y = 0) {
         $this->crop_x = $crop_x;
         $this->crop_y = $crop_y;
     }
 
-    public function setCrop($crop_x = 0, $crop_y = 0)
-    {
+    public function setCrop($crop_x = 0, $crop_y = 0) {
         $this->crop_x = $crop_x;
         $this->crop_y = $crop_y;
         return $this;
     }
 
-    public function calculate()
-    {
+    public function calculate() {
 
         $old_x = $this->_owner->imagesx();
         $old_y = $this->_owner->imagesy();
 
         $this->canvas_x = $old_x;
         $this->canvas_y = $old_y;
-        
+
         //Calculate the cropping area
         if ($this->crop_x > 0) {
             if ($this->canvas_x > $this->crop_x) {
                 $this->canvas_x = $this->crop_x;
             }
         }
-        
+
         if ($this->crop_y > 0) {
             if ($this->canvas_y > $this->crop_y) {
                 $this->canvas_y = $this->crop_y;
@@ -91,31 +84,24 @@ class Image_Fx_Crop extends Image_Fx_Abstract implements Image_Plugin_Interface 
         return true;
     }
 
-    public function generate()
-    {
+    public function generate() {
         $this->calculate();
 
         $crop = new Image_Image();
         $crop->createImageTrueColorTransparent($this->canvas_x, $this->canvas_y);
 
-        $src_x = $this->_owner->handle_x-floor($this->canvas_x/2);
-        $src_y = $this->_owner->handle_y-floor($this->canvas_y/2);
+        $src_x = $this->_owner->handle_x - floor($this->canvas_x / 2);
+        $src_y = $this->_owner->handle_y - floor($this->canvas_y / 2);
 
         imagecopy(
-            $crop->image,
-            $this->_owner->image,
-            0,
-            0,
-            $src_x,
-            $src_y,
-            $this->canvas_x,
-            $this->canvas_y
+                $crop->image, $this->_owner->image, 0, 0, $src_x, $src_y, $this->canvas_x, $this->canvas_y
         );
 
         $this->_owner->image = $crop->image;
-        
+
         unset($crop);
 
         return true;
     }
+
 }

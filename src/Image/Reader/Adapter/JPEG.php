@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-reader-adapter-jpeg
  *
@@ -40,25 +41,20 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
+class Image_Reader_Adapter_JPEG extends Image_Reader_Abstract {
 
-
-class Image_Reader_Adapter_JPEG extends Image_Reader_Abstract
-{
-        
-    public $version = 1.0;
-    
     /**
      * Return an image resource from file or URL
      * 
      * @param string $filename
      * @return resource an image resource identifier on success, false on errors.
      */
-    public function getImage($filename)
-    {
+    public function getImage($filename) {
         if ($this->_detectGD('JPEG') && function_exists('imagecreatefromjpeg')) {
             return imagecreatefromjpeg($filename);
         }
-        
+
         return false;
     }
+
 }

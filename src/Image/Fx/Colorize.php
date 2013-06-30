@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-fx-flip
  *
@@ -40,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Image.php';
 
 require_once 'Image/Plugin/Base.php';
@@ -49,40 +49,28 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Fx_Colorize extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "colorize";
-
-    public $version = 1.0;
-
-    public function __construct($find = '000000', $replace = '000000')
-    {
+    public function __construct($find = '000000', $replace = '000000') {
         $this->find = $find;
         $this->replace = $replace;
     }
 
-    public function setColorize($find = '000000', $replace = '000000')
-    {
+    public function setColorize($find = '000000', $replace = '000000') {
         $this->find = $find;
         $this->replace = $replace;
         return $this;
     }
 
-    public function generate()
-    {
+    public function generate() {
 
         $findColor = Image_Image::hexColorToArrayColor($this->find);
         $replaceColor = Image_Image::hexColorToArrayColor($this->replace);
-        
-        $index = imagecolorclosest($this->_owner->image, 
-                                   $findColor['red'], 
-                                   $findColor['green'], 
-                                   $findColor['blue']);//find
-                                   
-        imagecolorset($this->_owner->image, $index, 
-                                   $replaceColor['red'], 
-                                   $replaceColor['green'], 
-                                   $replaceColor['blue']);//replace
-        
+
+        $index = imagecolorclosest($this->_owner->image, $findColor['red'], $findColor['green'], $findColor['blue']); //find
+
+        imagecolorset($this->_owner->image, $index, $replaceColor['red'], $replaceColor['green'], $replaceColor['blue']); //replace
+
         unset($index);
         return true;
     }
+
 }

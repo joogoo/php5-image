@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-draw-primitive
  *
@@ -40,27 +41,20 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "primitive";
-
-    public $version = 1.0;
-
     private $__shapes = array();
 
-    public function __construct($base_color = "000000")
-    {
+    public function __construct($base_color = "000000") {
         $this->base_color = $base_color;
     }
 
-    public function addLine($x1, $y1, $x2, $y2, $color = "")
-    {
-        if(empty($color)) {
+    public function addLine($x1, $y1, $x2, $y2, $color = "") {
+        if (empty($color)) {
             $color = $this->base_color;
         }
         $this->__shapes[] = array(
@@ -68,28 +62,25 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
         );
     }
 
-    public function addRectangle($x1, $y1, $x2, $y2, $color = "", $filled = false)
-    {
-        if(empty($color)) {
+    public function addRectangle($x1, $y1, $x2, $y2, $color = "", $filled = false) {
+        if (empty($color)) {
             $color = $this->base_color;
         }
-        if(! $filled) {
+        if (!$filled) {
             $this->__shapes[] = array(
                 "RECTANGLE", $x1, $y1, $x2, $y2,
-            $color
+                $color
             );
-        }
-        else {
+        } else {
             $this->__shapes[] = array(
                 "FILLED_RECTANGLE", $x1, $y1, $x2,
-            $y2, $color
+                $y2, $color
             );
         }
     }
 
-    public function addFilledRectangle($x1, $y1, $x2, $y2, $color = "")
-    {
-        if(empty($color)) {
+    public function addFilledRectangle($x1, $y1, $x2, $y2, $color = "") {
+        if (empty($color)) {
             $color = $this->base_color;
         }
         $this->__shapes[] = array(
@@ -97,29 +88,26 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
         );
     }
 
-    public function addEllipse($x1, $y1, $x2, $y2, $color = "", $filled = false)
-    {
-        if(empty($color)) {
+    public function addEllipse($x1, $y1, $x2, $y2, $color = "", $filled = false) {
+        if (empty($color)) {
             $color = $this->base_color;
         }
         $w = $x2 - $x1;
         $h = $y2 - $y1;
-        if(! $filled) {
+        if (!$filled) {
             $this->__shapes[] = array(
                 "ELLIPSE", $x1, $y1, $w, $h, $color
             );
-        }
-        else {
+        } else {
             $this->__shapes[] = array(
                 "FILLED_ELLIPSE", $x1, $y1, $w, $h,
-            $color
+                $color
             );
         }
     }
 
-    public function addFilledEllipse($x1, $y1, $x2, $y2, $color = "")
-    {
-        if(empty($color)) {
+    public function addFilledEllipse($x1, $y1, $x2, $y2, $color = "") {
+        if (empty($color)) {
             $color = $this->base_color;
         }
         $w = $x2 - $x1;
@@ -129,9 +117,8 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
         );
     }
 
-    public function addCircle($x, $y, $r, $color = "")
-    {
-        if(empty($color)) {
+    public function addCircle($x, $y, $r, $color = "") {
+        if (empty($color)) {
             $color = $this->base_color;
         }
         $this->__shapes[] = array(
@@ -139,9 +126,8 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
         );
     }
 
-    public function generate()
-    {
-        foreach($this->__shapes as $shape) {
+    public function generate() {
+        foreach ($this->__shapes as $shape) {
             switch ($shape[0]) {
                 case "LINE":
                     $color = $this->_owner->imagecolorallocate($shape[5]);
@@ -166,4 +152,5 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
             }
         }
     }
+
 }
