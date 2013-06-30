@@ -196,7 +196,7 @@ class Image_Image {
         }
         $arrColor = Image_Image::hexColorToArrayColor($color);
         $bgcolor = imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
-        imagefill($this->image, 0, 0, $bgcolor);
+        imagefill($this->image, $x, $y, $bgcolor);
     }
 
     public function imagecolorallocate($color = "FFFFFF") {

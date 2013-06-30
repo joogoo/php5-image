@@ -65,11 +65,9 @@ class Image_Draw_Scanline extends Image_Draw_Abstract implements Image_Plugin_In
         $d = imagecolorallocatealpha($this->_owner->image, $arrColor['red'], $arrColor['green'], $arrColor['blue'], $this->dark_alpha);
         for ($x = 0; $x < $this->_owner->imagesy(); $x += $this->width) {
             if ($alt++ % 2 == 0) {
-                imagefilledrectangle($this->_owner->image, 0, $x, $this->_owner->imagesx(), $x +
-                        $this->width - 1, $l);
+                imagefilledrectangle($this->_owner->image, 0, $x, $this->_owner->imagesx(), $x + $this->width - 1, $l);
             } else {
-                imagefilledrectangle($this->_owner->image, 0, $x, $this->_owner->imagesx(), $x +
-                        $this->width - 1, $d);
+                imagefilledrectangle($this->_owner->image, 0, $x, $this->_owner->imagesx(), $x + $this->width - 1, $d);
             }
         }
         return true;
