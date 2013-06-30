@@ -112,6 +112,11 @@
             echo "<div class=\"thumb\"><img src=\"samples/qrcode.php\"></div>";
             echo "<div class=\"caption\">QR Code</div>";
         echo "</div>";
+
+        echo "<div class=\"thumbHolder\" style=\"background: url('samples/bg/10.gif');\">";
+            echo "<div class=\"thumb\"><img src=\"samples/layers.php\"></div>";
+            echo "<div class=\"caption\">Layers</div>";
+        echo "</div>";
         
     echo "</div>";
     

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * image-draw-border
+ * image-draw-watermark
  *
  * Copyright (c) 2009-2011, Nikolay Petrovski <to.petrovski@gmail.com>.
  * All rights reserved.
@@ -40,57 +41,40 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
-require_once 'Image/Image.php';
-
 require_once 'Image/Plugin/Base.php';
 
 require_once 'Image/Plugin/Interface.php';
 
-class Image_Draw_Border extends Image_Draw_Abstract implements Image_Plugin_Interface {
+class Image_Draw_Layer extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public $sub_type_id = "border";
-
+    public $sub_type_id = "layer";
     public $version = 1.0;
 
-    public function __construct($padding = 10, $color = "000000")
-    {
-        $this->padding = $padding;
-        $this->color = $color;
+    public function __construct(Image_Image $img = null) {
+        $this->img = $img;
     }
 
-    public function setBorder($padding = 10, $color = "000000")
-    {
-        $this->padding = $padding;
-        $this->color = $color;
-        return $this;
-    }
+    public function generate() {
+        //getting the width and height of the body part image, (should be the same size as the canvas)
 
-    public function setPadding($padding = 10)
-    {
-        $this->padding = $padding;
-        return $this;
-    }
 
-    public function setColor($color = "000000")
-    {
-        $this->color = $color;
-        return $this;
-    }
+        $layer_w = $this->img->imagesx();
+        $layer_h = $this->img->imagesy();
 
-    public function generate()
-    {
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
-        $padding = $this->padding;
-        $arrColor = Image_Image::hexColorToArrayColor($this->color);
-        $temp = new Image_Image();
-        $temp->createImageTrueColor($width + ($padding * 2), $height + ($padding * 2));
-        $tempcolor = imagecolorallocate($temp->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
-        imagefill($temp->image, 0, 0, $tempcolor);
-        imagecopy($temp->image, $this->_owner->image, $padding, $padding, 0, 0, $width, $height);
-        $this->_owner->image = $temp->image;
-        unset($temp);
+
+        //making sure that alpha blending is enabled
+        imagealphablending($this->_owner->image, true);
+
+        //making sure to preserve the alpha info
+        imagesavealpha($this->_owner->image, true);
+
+        //finally, putting that image on top of our canvas
+        imagecopyresampled($this->_owner->image, $this->img->image, 0, 0, 0, 0, $width, $height, $layer_w, $layer_h);
+
+        //$this->_owner->image
         return true;
     }
+
 }
