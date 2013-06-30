@@ -69,8 +69,7 @@ class Image_Draw_Trueshadow extends Image_Draw_Abstract implements Image_Plugin_
         $c = 0;
         $m_offset = floor($matrix_width / 2);
         $temp = new Image_Image();
-        $temp->createImageTrueColorTransparent($width + ($matrix_width * 2), $height + ($matrix_width *
-                2));
+        $temp->createImageTrueColorTransparent($width + ($matrix_width * 2), $height + ($matrix_width * 2));
         imagecopy($temp->image, $this->_owner->image, $matrix_width, $matrix_width, 0, 0, $width, $height);
         $w = $temp->imagesx();
         $h = $temp->imagesy();
@@ -94,8 +93,7 @@ class Image_Draw_Trueshadow extends Image_Draw_Abstract implements Image_Plugin_
         if ($this->color != "image") {
             $arrColor = $this->_owner->hexColorToArrayColor($this->color);
         }
-        $temp->createImageTrueColorTransparent($width + $distance + $m_offset, $height + $distance +
-                $m_offset);
+        $temp->createImageTrueColorTransparent($width + $distance + $m_offset, $height + $distance + $m_offset);
         imagesavealpha($temp->image, true);
         imagealphablending($temp->image, true);
         for ($i = $m_offset; $i < $w + $m_offset + $matrix_width; $i++) {
@@ -105,16 +103,11 @@ class Image_Draw_Trueshadow extends Image_Draw_Abstract implements Image_Plugin_
                 $sumb = 0;
                 $suma = 0;
                 for ($k = 0; $k < $matrix_width; $k++) {
-                    $xx = $i - (($matrix_width) >>
-                            1) + $k;
-                    $sumr += $p[$xx][$j]['r'] *
-                            $matrix[$k];
-                    $sumg += $p[$xx][$j]['g'] *
-                            $matrix[$k];
-                    $sumb += $p[$xx][$j]['b'] *
-                            $matrix[$k];
-                    $suma += $p[$xx][$j]['a'] *
-                            $matrix[$k];
+                    $xx = $i - (($matrix_width) >> 1) + $k;
+                    $sumr += $p[$xx][$j]['r'] * $matrix[$k];
+                    $sumg += $p[$xx][$j]['g'] * $matrix[$k];
+                    $sumb += $p[$xx][$j]['b'] * $matrix[$k];
+                    $suma += $p[$xx][$j]['a'] * $matrix[$k];
                 }
                 $p1[$i][$j]['r'] = $sumr / $matrix_sum;
                 $p1[$i][$j]['g'] = $sumg / $matrix_sum;
@@ -129,31 +122,24 @@ class Image_Draw_Trueshadow extends Image_Draw_Abstract implements Image_Plugin_
                 $sumb = 0;
                 $suma = 0;
                 for ($k = 0; $k < $matrix_width; $k++) {
-                    $xy = $j - (($matrix_width) >>
-                            1) + $k;
-                    $sumr += $p1[$i][$xy]['r'] *
-                            $matrix[$k];
-                    $sumg += $p1[$i][$xy]['g'] *
-                            $matrix[$k];
-                    $sumb += $p1[$i][$xy]['b'] *
-                            $matrix[$k];
-                    $suma += $p1[$i][$xy]['a'] *
-                            $matrix[$k];
+                    $xy = $j - (($matrix_width) >> 1) + $k;
+                    $sumr += $p1[$i][$xy]['r'] * $matrix[$k];
+                    $sumg += $p1[$i][$xy]['g'] * $matrix[$k];
+                    $sumb += $p1[$i][$xy]['b'] * $matrix[$k];
+                    $suma += $p1[$i][$xy]['a'] * $matrix[$k];
                 }
                 if ($this->color != "image") {
-                    $col = imagecolorallocatealpha($temp->image, $arrColor['red'], $arrColor['green'], $arrColor['blue'], ($suma /
-                            $matrix_sum));
+                    $col = imagecolorallocatealpha($temp->image, $arrColor['red'], $arrColor['green'], $arrColor['blue'], ($suma / $matrix_sum));
                 } else {
                     $col = imagecolorallocatealpha($temp->image, ($sumr /
                             $matrix_sum), ($sumg /
                             $matrix_sum), ($sumb /
-                            $matrix_sum), ($suma /
-                            $matrix_sum));
+                            $matrix_sum), ($suma / $matrix_sum));
                 }
-                imagesetpixel($temp->image, $i + $d_offset, $j +
-                        $d_offset, $col);
+                imagesetpixel($temp->image, $i + $d_offset, $j + $d_offset, $col);
             }
         }
+
         imagecopy($temp->image, $this->_owner->image, 0, 0, 0, 0, $width, $height);
         $this->_owner->image = $temp->image;
         unset($temp);

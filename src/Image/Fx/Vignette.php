@@ -52,10 +52,10 @@ class Image_Fx_Vignette extends Image_Fx_Abstract implements Image_Plugin_Interf
     }
 
     public function generate() {
+
         imagesavealpha($this->_owner->image, true);
         imagealphablending($this->_owner->image, false);
-        $image_x = $this->_owner->imagesx();
-        $image_y = $this->_owner->imagesy();
+
         $vignette_x = $this->vignette->imagesx();
         $vignette_y = $this->vignette->imagesy();
         for ($y = 0; $y < $vignette_y; $y++) {
