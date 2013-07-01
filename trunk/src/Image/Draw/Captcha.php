@@ -48,6 +48,8 @@ require_once 'Image/Plugin/Interface.php';
 class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
     private $arr_ttf_font = array();
+    
+    private $text_color = "000000";
 
     public function __construct($password = "") {
         $this->password = $password;
@@ -85,13 +87,20 @@ class Image_Draw_Captcha extends Image_Draw_Abstract implements Image_Plugin_Int
         $this->text_angle_random = $angle_random;
         return $this;
     }
+    
+    public function setTextColor($color = "000000") {
+        $this->text_color = $color;
+        return $this;
+    }
 
     public function generate() {
         imagesavealpha($this->_owner->image, true);
         imagealphablending($this->_owner->image, true);
         $width = $this->_owner->imagesx();
         $height = $this->_owner->imagesy();
-        $white = imagecolorallocate($this->_owner->image, 0, 0, 0);
+        
+        $white = $this->_owner->imagecolorallocate($this->text_color);
+        //$white = imagecolorallocate($this->_owner->image, 0, 0, 0);
         $l = array();
         $total_width = 0;
         for ($x = 0; $x < strlen($this->password); $x++) {

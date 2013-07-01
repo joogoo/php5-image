@@ -47,106 +47,82 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
+    const LINE = 'LINE';
+    
+    const RECTANGLE = 'RECTANGLE';
+    
+    const FILLED_RECTANGLE = 'FILLED_RECTANGLE';
+    
+    const ELLIPSE = 'ELLIPSE';
+    
+    const FILLED_ELLIPSE = 'FILLED_ELLIPSE';
+    
     private $__shapes = array();
-
-    public function __construct($base_color = "000000") {
-        $this->base_color = $base_color;
+    
+    private $__base_color = "000000";
+    
+    private $__base_alpha = 0;
+    
+    public function __construct($base_color = "000000", $base_alpha = 0) {
+        $this->__base_color = $base_color;
+        $this->__base_alpha = $base_alpha;
     }
 
-    public function addLine($x1, $y1, $x2, $y2, $color = "") {
-        if (empty($color)) {
-            $color = $this->base_color;
-        }
-        $this->__shapes[] = array(
-            "LINE", $x1, $y1, $x2, $y2, $color
-        );
+    public function addLine($x1, $y1, $x2, $y2, $color = null) {
+        $this->__shapes[] = array(self::LINE, $x1, $y1, $x2, $y2, $color);
     }
 
-    public function addRectangle($x1, $y1, $x2, $y2, $color = "", $filled = false) {
-        if (empty($color)) {
-            $color = $this->base_color;
-        }
+    public function addRectangle($x1, $y1, $x2, $y2, $color = null, $filled = false) {
         if (!$filled) {
-            $this->__shapes[] = array(
-                "RECTANGLE", $x1, $y1, $x2, $y2,
-                $color
-            );
+            $this->__shapes[] = array(self::RECTANGLE, $x1, $y1, $x2, $y2, $color);
         } else {
-            $this->__shapes[] = array(
-                "FILLED_RECTANGLE", $x1, $y1, $x2,
-                $y2, $color
-            );
+            $this->__shapes[] = array(self::FILLED_RECTANGLE, $x1, $y1, $x2, $y2, $color);
         }
     }
 
-    public function addFilledRectangle($x1, $y1, $x2, $y2, $color = "") {
-        if (empty($color)) {
-            $color = $this->base_color;
-        }
-        $this->__shapes[] = array(
-            "FILLED_RECTANGLE", $x1, $y1, $x2, $y2, $color
-        );
+    public function addFilledRectangle($x1, $y1, $x2, $y2, $color = null) {
+        $this->__shapes[] = array(self::FILLED_RECTANGLE, $x1, $y1, $x2, $y2, $color);
     }
 
-    public function addEllipse($x1, $y1, $x2, $y2, $color = "", $filled = false) {
-        if (empty($color)) {
-            $color = $this->base_color;
-        }
+    public function addEllipse($x1, $y1, $x2, $y2, $color = null, $filled = false) {
         $w = $x2 - $x1;
         $h = $y2 - $y1;
         if (!$filled) {
-            $this->__shapes[] = array(
-                "ELLIPSE", $x1, $y1, $w, $h, $color
-            );
+            $this->__shapes[] = array(self::ELLIPSE, $x1, $y1, $w, $h, $color);
         } else {
-            $this->__shapes[] = array(
-                "FILLED_ELLIPSE", $x1, $y1, $w, $h,
-                $color
-            );
+            $this->__shapes[] = array(self::FILLED_ELLIPSE, $x1, $y1, $w, $h, $color);
         }
     }
 
-    public function addFilledEllipse($x1, $y1, $x2, $y2, $color = "") {
-        if (empty($color)) {
-            $color = $this->base_color;
-        }
-        $w = $x2 - $x1;
-        $h = $y2 - $y1;
-        $this->__shapes[] = array(
-            "FILLED_ELLIPSE", $x1, $y1, $w, $h, $color
-        );
+    public function addFilledEllipse($x1, $y1, $x2, $y2, $color = null) {
+        $this->__shapes[] = array(self::FILLED_ELLIPSE, $x1, $y1, $x2 - $x1, $y2 - $y1, $color);
     }
 
-    public function addCircle($x, $y, $r, $color = "") {
-        if (empty($color)) {
-            $color = $this->base_color;
-        }
-        $this->__shapes[] = array(
-            "ELLIPSE", $x, $y, $r, $r, $color
-        );
+    public function addCircle($x, $y, $radius, $color = null) {
+        $this->__shapes[] = array(self::ELLIPSE, $x, $y, $radius, $radius, $color);
     }
 
     public function generate() {
+        
         foreach ($this->__shapes as $shape) {
+            $color = $this->_owner->imagecolorallocate((!isset($shape[5]) || is_null($shape[5])) ? 
+                        $this->__base_color : 
+                        $shape[5], $this->__base_alpha);
+            
             switch ($shape[0]) {
-                case "LINE":
-                    $color = $this->_owner->imagecolorallocate($shape[5]);
+                case self::LINE:
                     imageline($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
                     break;
-                case "RECTANGLE":
-                    $color = $this->_owner->imagecolorallocate($shape[5]);
+                case self::RECTANGLE:
                     imagerectangle($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
                     break;
-                case "FILLED_RECTANGLE":
-                    $color = $this->_owner->imagecolorallocate($shape[5]);
+                case self::FILLED_RECTANGLE:
                     imagefilledrectangle($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
                     break;
-                case "ELLIPSE":
-                    $color = $this->_owner->imagecolorallocate($shape[5]);
+                case self::ELLIPSE:
                     imageellipse($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
                     break;
-                case "FILLED_ELLIPSE":
-                    $color = $this->_owner->imagecolorallocate($shape[5]);
+                case self::FILLED_ELLIPSE:
                     imagefilledellipse($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
                     break;
             }

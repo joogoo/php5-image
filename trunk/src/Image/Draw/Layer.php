@@ -52,9 +52,8 @@ class Image_Draw_Layer extends Image_Draw_Abstract implements Image_Plugin_Inter
     }
 
     public function generate() {
+        
         //getting the width and height of the body part image, (should be the same size as the canvas)
-
-
         $layer_w = $this->img->imagesx();
         $layer_h = $this->img->imagesy();
 
