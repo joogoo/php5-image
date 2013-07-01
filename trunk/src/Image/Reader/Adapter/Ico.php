@@ -45,7 +45,7 @@
 /**
  * Open ICO files and extract any size/depth to PNG format
  */
-class Image_Reader_Adapter_ICO extends Image_Reader_Abstract {
+class Image_Reader_Adapter_Ico extends Image_Reader_Abstract {
 
     /**
      * Background color on icon extraction
@@ -86,6 +86,10 @@ class Image_Reader_Adapter_ICO extends Image_Reader_Abstract {
          */
         for ($i = 0; $i < $this->ico['Count']; $i++) {
             $icodata = unpack("CWidth/CHeight/CColorCount/CReserved/SPlanes/SBitCount/LSizeInBytes/LFileOffset", $data);
+            if (0 == $icodata['Width']) 
+                $icodata['Width'] = 256;
+            if (0 == $icodata['Height']) 
+                $icodata['Height'] = 256;
             $icodata['FileOffset'] -= ( $this->ico['Count'] * 16) + 6;
             if ($icodata['ColorCount'] == 0)
                 $icodata['ColorCount'] = 256;

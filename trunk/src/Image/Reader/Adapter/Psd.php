@@ -41,7 +41,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-class Image_Reader_Adapter_PSD extends Image_Reader_Abstract {
+class Image_Reader_Adapter_Psd extends Image_Reader_Abstract {
 
     public $infoArray;
     public $fp;
