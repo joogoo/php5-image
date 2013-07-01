@@ -6,7 +6,7 @@ $image = new Image_Image();
 $image->createImageTrueColor(206, 96, "FF0000");
 
 //Primitives
-$background = new Image_Draw_Primitive("FFFFFF");
+$background = new Image_Draw_Primitive("FFFFFF", 20);
 $background->addLine(20,20, 80,80);
 $background->addRectangle(100,20, 180,80);
 $background->addFilledRectangle(150,10, 170,30);
@@ -28,7 +28,8 @@ $captcha->addTTFFont(dirname(__FILE__) . '/../fonts/bluehigh.ttf');
 $captcha->setTextSize(20)
         ->setSizeRandom(20)
         ->setAngleRandom(60)
-        ->setTextSpacing(5);
+        ->setTextSpacing(5)
+        ->setTextColor("55ffbb");
 
 $image->attach($captcha);
 

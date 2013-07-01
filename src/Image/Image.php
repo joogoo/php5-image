@@ -41,6 +41,11 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
+
+require_once 'Image/Exception.php';
+
+require_once 'Image/Plugin/Interface.php';
+
 class Image_Image {
 
     public $image;
@@ -73,7 +78,7 @@ class Image_Image {
         } else {
             $this->_attachments[$type] = 1;
         }
-        $id = "a_" . $type . "_" . $this->_attachments[$type];
+        $id = "#" . $type . "_" . $this->_attachments[$type];
         $this->_attachments_stack[$id] = $child;
         $this->_attachments_stack[$id]->attachToOwner($this);
         return $id;
@@ -116,6 +121,8 @@ class Image_Image {
     public function openImage($filename = "") {
         if (file_exists($filename)) {
 
+            require_once 'Image/Reader/Default.php';
+            
             $this->_reader = new Image_Reader_Default($filename);
 
             $this->image = $this->_reader->read($filename);
@@ -194,24 +201,29 @@ class Image_Image {
         if (!isset($this->image)) {
             return false;
         }
-        $arrColor = Image_Image::hexColorToArrayColor($color);
+        $arrColor = self::hexColorToArrayColor($color);
         $bgcolor = imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
         imagefill($this->image, $x, $y, $bgcolor);
     }
 
-    public function imagecolorallocate($color = "FFFFFF") {
-        $arrColor = Image_Image::hexColorToArrayColor($color);
-        return imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
+    public function imagecolorallocate($color = "FFFFFF", $alpha = null) {
+        $arrColor = self::hexColorToArrayColor($color);
+        if (is_null($alpha)) {
+            return imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
+        }
+        else {
+            return imagecolorallocatealpha($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue'], intval($alpha));
+        }
     }
 
     public function displace($map) {
         $width = $this->imagesx();
         $height = $this->imagesy();
-        $temp = new Image_Image($width, $height);
+        $temp = new self($width, $height);
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 $rgb = $this->imageColorAt($map['x'][$x][$y], $map['y'][$x][$y]);
-                $arrRgb = Image_Image::intColorToArrayColor($rgb);
+                $arrRgb = self::intColorToArrayColor($rgb);
                 $col = imagecolorallocatealpha($temp->image, $arrRgb['red'], $arrRgb['green'], $arrRgb['blue'], $arrRgb['alpha']);
                 imagesetpixel($temp->image, $x, $y, $col);
             }
@@ -231,8 +243,8 @@ class Image_Image {
     }
 
     public static function arrayColorToHexColor($arrColor = array(0, 0, 0)) {
-        $intColor = Image_Image::arrayColorToIntColor($arrColor);
-        $hexColor = Image_Image::intColorToHexColor($intColor);
+        $intColor = self::arrayColorToIntColor($arrColor);
+        $hexColor = self::intColorToHexColor($intColor);
         return $hexColor;
     }
 
@@ -245,8 +257,8 @@ class Image_Image {
     }
 
     public static function intColorToHexColor($intColor = 0) {
-        $arrColor = Image_Image::intColorToArrayColor($intColor);
-        $hexColor = Image_Image::arrayColorToHexColor($arrColor);
+        $arrColor = self::intColorToArrayColor($intColor);
+        $hexColor = self::arrayColorToHexColor($arrColor);
         return $hexColor;
     }
 
@@ -254,12 +266,13 @@ class Image_Image {
         $arrColor['red'] = hexdec(substr($hexColor, 0, 2));
         $arrColor['green'] = hexdec(substr($hexColor, 2, 2));
         $arrColor['blue'] = hexdec(substr($hexColor, 4, 2));
+        $arrColor['alpha'] = 1;
         return $arrColor;
     }
 
     public static function hexColorToIntColor($hexColor = "000000") {
-        $arrColor = Image_Image::hexColorToArrayColor($hexColor);
-        $intColor = Image_Image::arrayColorToIntColor($arrColor);
+        $arrColor = self::hexColorToArrayColor($hexColor);
+        $intColor = self::arrayColorToIntColor($arrColor);
         return $intColor;
     }
 
@@ -273,7 +286,7 @@ class Image_Image {
         if ($name == "handle_y") {
             return ($this->mid_handle == true) ? floor($this->imagesy() / 2) : 0;
         }
-        if (substr($name, 0, 2) == "a_") {
+        if ('#' == $name{0}) {
             return $this->_attachments_stack[$name];
         } elseif (array_key_exists($name, $this->_settings)) {
             return $this->_settings[$name];
@@ -285,7 +298,7 @@ class Image_Image {
     public function __set($name, $value) {
         if ($name == "image") {
             $this->image = $value;
-        } elseif (substr($name, 0, 2) == "a_") {
+        } elseif ('#' == $name{0}) {
             $this->_attachments_stack[$name] = $value;
         } else {
             $this->_settings[$name] = $value;
