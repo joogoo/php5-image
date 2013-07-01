@@ -1,4 +1,5 @@
 <?php
+
 /**
  * image-reader-default
  *
@@ -40,19 +41,19 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
-
 class Image_Reader_Default {
 
-
     public function read($filename) {
-        
+
         $image_data = getimagesize($filename);
         if ($image_data) {
-            $class = 'Image_Reader_Adapter_' . strtoupper(image_type_to_extension($image_data[2], false));
-            $adapter = new $class();
-            
-            return $adapter->getImage($filename);
+            $class_name = 'Image_Reader_Adapter_' . ucfirst(strtolower(image_type_to_extension($image_data[2], false)));
+
+            if (class_exists($class_name)) {
+
+                $adapter = new $class_name();
+                return $adapter->getImage($filename);
+            }
         } else {
             //getimagesize failed
             return false;

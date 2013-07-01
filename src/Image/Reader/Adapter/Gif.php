@@ -1,7 +1,7 @@
 <?php
 
 /**
- * image-reader-adapter-png
+ * image-reader-adapter-gif
  *
  * Copyright (c) 2009-2011, Nikolay Petrovski <to.petrovski@gmail.com>.
  * All rights reserved.
@@ -41,7 +41,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-class Image_Reader_Adapter_PNG extends Image_Reader_Abstract {
+class Image_Reader_Adapter_Gif extends Image_Reader_Abstract {
 
     /**
      * Return an image resource from file or URL
@@ -50,8 +50,8 @@ class Image_Reader_Adapter_PNG extends Image_Reader_Abstract {
      * @return resource an image resource identifier on success, false on errors.
      */
     public function getImage($filename) {
-        if ($this->_detectGD('PNG') && function_exists('imagecreatefrompng')) {
-            return imagecreatefrompng($filename);
+        if ($this->_detectGD('GIF') && function_exists('imagecreatefromgif')) {
+            return imagecreatefromgif($filename);
         }
 
         return false;
