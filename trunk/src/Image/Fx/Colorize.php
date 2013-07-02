@@ -50,8 +50,7 @@ require_once 'Image/Plugin/Interface.php';
 class Image_Fx_Colorize extends Image_Fx_Abstract implements Image_Plugin_Interface {
 
     public function __construct($find = '000000', $replace = '000000') {
-        $this->find = $find;
-        $this->replace = $replace;
+        $this->setColorize($find, $replace);
     }
 
     public function setColorize($find = '000000', $replace = '000000') {
@@ -69,7 +68,7 @@ class Image_Fx_Colorize extends Image_Fx_Abstract implements Image_Plugin_Interf
 
         imagecolorset($this->_owner->image, $index, $replaceColor['red'], $replaceColor['green'], $replaceColor['blue']); //replace
 
-        unset($index);
+        unset($index);  
         return true;
     }
 
