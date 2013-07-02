@@ -44,6 +44,8 @@
 
 require_once 'Image/Plugin/Interface.php';
 
+require_once 'Image/Helper/Abstract.php';
+
 class Image_Image {
 
     public $image;
@@ -90,7 +92,7 @@ class Image_Image {
             }
         }
 
-        return true;
+        return $this;
     }
 
     public function createImage($width = 100, $height = 100, $color = "FFFFFF") {
@@ -249,6 +251,14 @@ class Image_Image {
     
     public function getSettings($key) {
         return isset($this->_settings[$key]) ? $this->_settings[$key] : null;
+    }
+    
+    public function __call($name, $arguments) {
+        foreach($this->_attachments_stack as $obj) {
+            if ($obj instanceof Image_Helper_Abstract) {
+                return call_user_func_array(array($obj, $name), $arguments);
+            }
+        }
     }
 
     private function _file_info($filename, $round = 2) {

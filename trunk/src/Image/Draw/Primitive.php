@@ -57,6 +57,8 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
     
     const FILLED_ELLIPSE = 'FILLED_ELLIPSE';
     
+    const SPIRAL = 'SPIRAL';
+    
     private $__shapes = array();
     
     private $__base_color = "000000";
@@ -69,61 +71,85 @@ class Image_Draw_Primitive extends Image_Draw_Abstract implements Image_Plugin_I
     }
 
     public function addLine($x1, $y1, $x2, $y2, $color = null) {
-        $this->__shapes[] = array(self::LINE, $x1, $y1, $x2, $y2, $color);
+        $this->__shapes[] = array(self::LINE, $color, $x1, $y1, $x2, $y2);
     }
 
     public function addRectangle($x1, $y1, $x2, $y2, $color = null, $filled = false) {
         if (!$filled) {
-            $this->__shapes[] = array(self::RECTANGLE, $x1, $y1, $x2, $y2, $color);
+            $this->__shapes[] = array(self::RECTANGLE, $color, $x1, $y1, $x2, $y2);
         } else {
-            $this->__shapes[] = array(self::FILLED_RECTANGLE, $x1, $y1, $x2, $y2, $color);
+            $this->__shapes[] = array(self::FILLED_RECTANGLE, $color, $x1, $y1, $x2, $y2);
         }
     }
 
     public function addFilledRectangle($x1, $y1, $x2, $y2, $color = null) {
-        $this->__shapes[] = array(self::FILLED_RECTANGLE, $x1, $y1, $x2, $y2, $color);
+        $this->__shapes[] = array(self::FILLED_RECTANGLE, $color, $x1, $y1, $x2, $y2);
     }
 
     public function addEllipse($x1, $y1, $x2, $y2, $color = null, $filled = false) {
         $w = $x2 - $x1;
         $h = $y2 - $y1;
         if (!$filled) {
-            $this->__shapes[] = array(self::ELLIPSE, $x1, $y1, $w, $h, $color);
+            $this->__shapes[] = array(self::ELLIPSE, $color, $x1, $y1, $w, $h);
         } else {
-            $this->__shapes[] = array(self::FILLED_ELLIPSE, $x1, $y1, $w, $h, $color);
+            $this->__shapes[] = array(self::FILLED_ELLIPSE, $color, $x1, $y1, $w, $h);
         }
     }
 
     public function addFilledEllipse($x1, $y1, $x2, $y2, $color = null) {
-        $this->__shapes[] = array(self::FILLED_ELLIPSE, $x1, $y1, $x2 - $x1, $y2 - $y1, $color);
+        $this->__shapes[] = array(self::FILLED_ELLIPSE, $color, $x1, $y1, $x2 - $x1, $y2 - $y1);
     }
 
     public function addCircle($x, $y, $radius, $color = null) {
-        $this->__shapes[] = array(self::ELLIPSE, $x, $y, $radius, $radius, $color);
+        $this->__shapes[] = array(self::ELLIPSE, $color, $x, $y, $radius, $radius);
     }
 
+    /**
+     * Draw a spiral
+     * 
+     * @param int $x
+     * @param int $y
+     * @param int $radius
+     * @param int $angle
+     * @param type $color
+     */
+    public function addSpiral($x, $y, $radius, $angle, $color = null) {
+        $this->__shapes[] = array(self::SPIRAL, $color, $x, $y, $radius, $angle); 
+    }
+    
     public function generate() {
         
         foreach ($this->__shapes as $shape) {
-            $color = $this->_owner->imagecolorallocate((!isset($shape[5]) || is_null($shape[5])) ? 
-                        $this->__base_color : 
-                        $shape[5], $this->__base_alpha);
+            $type = array_shift($shape);
+            $color = array_shift($shape);
             
-            switch ($shape[0]) {
+            $color = $this->_owner->imagecolorallocate((!isset($color) || is_null($color)) ? 
+                        $this->__base_color : 
+                        $color, $this->__base_alpha);
+            
+            switch ($type) {
                 case self::LINE:
-                    imageline($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
+                    imageline($this->_owner->image, $shape[0], $shape[1], $shape[2], $shape[3], $color);
                     break;
                 case self::RECTANGLE:
-                    imagerectangle($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
+                    imagerectangle($this->_owner->image, $shape[0], $shape[1], $shape[2], $shape[3], $color);
                     break;
                 case self::FILLED_RECTANGLE:
-                    imagefilledrectangle($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
+                    imagefilledrectangle($this->_owner->image, $shape[0], $shape[1], $shape[2], $shape[3], $color);
                     break;
                 case self::ELLIPSE:
-                    imageellipse($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
+                    imageellipse($this->_owner->image, $shape[0], $shape[1], $shape[2], $shape[3], $color);
                     break;
                 case self::FILLED_ELLIPSE:
-                    imagefilledellipse($this->_owner->image, $shape[1], $shape[2], $shape[3], $shape[4], $color);
+                    imagefilledellipse($this->_owner->image, $shape[0], $shape[1], $shape[2], $shape[3], $color);
+                    break;
+                case self::SPIRAL:
+                    $angle = $r = 0;
+                    while($r <= $shape[2] ) {
+                        imagearc($this->_owner->image, $shape[0], $shape[1], $r, $r, $angle - $shape[3], $angle, $color);
+                        $angle += $shape[3];
+                        $r++;
+                    }
                     break;
             }
         }

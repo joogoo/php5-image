@@ -9,4 +9,7 @@ $image->attach(new Image_Fx_Crop(196,96));
 
 $image->attach(new Image_Helper_FaceDetector());
 
+$image->evaluateFXStack()->drawFaceRectangle();
+
 $image->imagePng();
+
