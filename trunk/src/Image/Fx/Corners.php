@@ -82,34 +82,25 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
                             $cyo = $y;
                             break;
                         case 1:
-                            $xo = ($image_x -
-                                    $corner_x);
+                            $xo = ($image_x - $corner_x);
                             $yo = 0;
-                            $cxo = $corner_x -
-                                    $x;
+                            $cxo = $corner_x - $x;
                             $cyo = $y;
                             break;
                         case 2:
-                            $xo = ($image_x -
-                                    $corner_x);
-                            $yo = ($image_y -
-                                    $corner_y);
-                            $cxo = $corner_x -
-                                    $x;
-                            $cyo = $corner_y -
-                                    $y;
+                            $xo = ($image_x - $corner_x);
+                            $yo = ($image_y - $corner_y);
+                            $cxo = $corner_x - $x;
+                            $cyo = $corner_y - $y;
                             break;
                         case 3:
                             $xo = 0;
-                            $yo = ($image_y -
-                                    $corner_y);
+                            $yo = ($image_y - $corner_y);
                             $cxo = $x;
-                            $cyo = $corner_y -
-                                    $y;
+                            $cyo = $corner_y - $y;
                             break;
                     }
-                    $irgb = imagecolorat($this->_owner->image, $xo +
-                            $x, $yo + $y);
+                    $irgb = imagecolorat($this->_owner->image, $xo + $x, $yo + $y);
                     $r = ($irgb >> 16) & 0xFF;
                     $g = ($irgb >> 8) & 0xFF;
                     $b = $irgb & 0xFF;
@@ -121,17 +112,13 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
                             imagesetpixel($this->_owner->image, $x, $y, $colour);
                             break;
                         case 1:
-                            imagesetpixel($this->_owner->image, $xo +
-                                    $x, $y, $colour);
+                            imagesetpixel($this->_owner->image, $xo + $x, $y, $colour);
                             break;
                         case 2:
-                            imagesetpixel($this->_owner->image, $xo +
-                                    $x, $yo +
-                                    $y, $colour);
+                            imagesetpixel($this->_owner->image, $xo + $x, $yo + $y, $colour);
                             break;
                         case 3:
-                            imagesetpixel($this->_owner->image, $x, $yo +
-                                    $y, $colour);
+                            imagesetpixel($this->_owner->image, $x, $yo +  $y, $colour);
                             break;
                     }
                 }
@@ -140,18 +127,19 @@ class Image_Fx_Corners extends Image_Fx_Abstract implements Image_Plugin_Interfa
     }
 
     private function _cornerpng() {
-        $c = "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m";
-        $c .= "dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAH2SURBVHjaYvz//z/DQAFGRkZNIAXCakCsBMSyQCwJ";
-        $c .= "xCJAzA/EnAABxEJnB8kDKWsgtgBiMyA2AmJWfHoAAoiFDo4ChYQ7ELsBsTMQK5CiHyCAWGjoMBUgFQDE";
-        $c .= "fkBsS645AAHEQgOHKQKpCCAOA2IDSs0DCCAGUCahBgYCDiBOB+KjQPyfWhgggKjlODsgXkxVh0ExQABR";
-        $c .= "6jBGIM4B4ms0cRwQAwQQJY4D5cYJNHMYFAMEELmOA5Vhq2nuOCAGCCByHOcCxPvo4jggBgggUh3nAcTH";
-        $c .= "6eY4IAYIIFJDjr6OA2KAACIlze2ju+OAGCCAiM2tqwfEcUAMEEDElHMTBsxxQAwQQIQcmDOgjgNigAAi";
-        $c .= "VH1dG2gHAgQQvop/8YA7DogBAgiXA9MHheOAGCCAmHC05+IYBgkACCAmLGKgxqbVYHEgQAAxYWmmhzEM";
-        $c .= "IgAQQOghGECVZjoVAUAAMaH1vvwYBhkACCDknBs2WHIuMgYIIOQodmMYhAAggJiQevzOg9GBAAEEC0Fr";
-        $c .= "Unv89AIAAQRzoAXDIAUAAQRzoNlgdSBAADFAh79+DcYcDMIAAcQEdSDrYA09gABigg4eDloAEEBM0JHN";
-        $c .= "QQsAAogJOuw6aAFAADFBx4QHLQAIICbogPWgBQABxAQdTR+0ACCAQP3eP0DMPFgdCBBgAJ273bQUqcwV";
-        $c .= "AAAAAElFTkSuQmCC";
-        return $c;
+        return <<<CORNERPNG
+iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
+dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAH2SURBVHjaYvz//z/DQAFGRkZNIAXCakCsBMSyQCwJ
+xCJAzA/EnAABxEJnB8kDKWsgtgBiMyA2AmJWfHoAAoiFDo4ChYQ7ELsBsTMQK5CiHyCAWGjoMBUgFQDE
+fkBsS645AAHEQgOHKQKpCCAOA2IDSs0DCCAGUCahBgYCDiBOB+KjQPyfWhgggKjlODsgXkxVh0ExQABR
+6jBGIM4B4ms0cRwQAwQQJY4D5cYJNHMYFAMEELmOA5Vhq2nuOCAGCCByHOcCxPvo4jggBgggUh3nAcTH
+6eY4IAYIIFJDjr6OA2KAACIlze2ju+OAGCCAiM2tqwfEcUAMEEDElHMTBsxxQAwQQIQcmDOgjgNigAAi
+VH1dG2gHAgQQvop/8YA7DogBAgiXA9MHheOAGCCAmHC05+IYBgkACCAmLGKgxqbVYHEgQAAxYWmmhzEM
+IgAQQOghGECVZjoVAUAAMaH1vvwYBhkACCDknBs2WHIuMgYIIOQodmMYhAAggJiQevzOg9GBAAEEC0Fr
+Unv89AIAAQRzoAXDIAUAAQRzoNlgdSBAADFAh79+DcYcDMIAAcQEdSDrYA09gABigg4eDloAEEBM0JHN
+QQsAAogJOuw6aAFAADFBx4QHLQAIICbogPWgBQABxAQdTR+0ACCAQP3eP0DMPFgdCBBgAJ273bQUqcwV
+AAAAAElFTkSuQmCC=
+CORNERPNG;
     }
 
 }

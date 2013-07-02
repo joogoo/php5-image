@@ -41,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-
 require_once 'Image/Exception.php';
 
 require_once 'Image/Plugin/Interface.php';
@@ -122,7 +121,7 @@ class Image_Image {
         if (file_exists($filename)) {
 
             require_once 'Image/Reader/Default.php';
-            
+
             $this->_reader = new Image_Reader_Default($filename);
 
             $this->image = $this->_reader->read($filename);
@@ -184,6 +183,12 @@ class Image_Image {
         return imageistruecolor($this->image);
     }
 
+    /**
+     * 
+     * @param int $x
+     * @param int $y
+     * @return int
+     */
     public function imageColorAt($x = 0, $y = 0) {
         if (!isset($this->image)) {
             return false;
@@ -197,21 +202,26 @@ class Image_Image {
         }
     }
 
-    public function imagefill($x = 0, $y = 0, $color = "FFFFFF") {
+    public function imagefill($x = 0, $y = 0, $color = "FFFFFF", $alpha = null) {
         if (!isset($this->image)) {
             return false;
         }
-        $arrColor = self::hexColorToArrayColor($color);
-        $bgcolor = imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
-        imagefill($this->image, $x, $y, $bgcolor);
+
+        imagefill($this->image, $x, $y, $this->imagecolorallocate($color, $alpha));
     }
 
     public function imagecolorallocate($color = "FFFFFF", $alpha = null) {
-        $arrColor = self::hexColorToArrayColor($color);
-        if (is_null($alpha)) {
-            return imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
+        
+        if (is_string($color)) {
+            $arrColor = self::hexColorToArrayColor($color);
+        } else if (is_int($color)) {
+            $arrColor = self::intColorToArrayColor($color);
+            $alpha = $arrColor['alpha'];
         }
-        else {
+        
+        if ($alpha) {
+            return imagecolorallocate($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue']);
+        } else {
             return imagecolorallocatealpha($this->image, $arrColor['red'], $arrColor['green'], $arrColor['blue'], intval($alpha));
         }
     }
@@ -223,9 +233,7 @@ class Image_Image {
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 $rgb = $this->imageColorAt($map['x'][$x][$y], $map['y'][$x][$y]);
-                $arrRgb = self::intColorToArrayColor($rgb);
-                $col = imagecolorallocatealpha($temp->image, $arrRgb['red'], $arrRgb['green'], $arrRgb['blue'], $arrRgb['alpha']);
-                imagesetpixel($temp->image, $x, $y, $col);
+                imagesetpixel($temp->image, $x, $y, $this->imagecolorallocate($rgb));
             }
         }
         $this->image = $temp->image;
@@ -234,46 +242,6 @@ class Image_Image {
 
     public function testImageHandle() {
         return (bool) (isset($this->image) && 'gd' == get_resource_type($this->image));
-    }
-
-    public static function arrayColorToIntColor($arrColor = array(0, 0, 0)) {
-        $intColor = (($arrColor['alpha'] & 0xFF) << 24) | (($arrColor['red'] & 0xFF) << 16) |
-                (($arrColor['green'] & 0xFF) << 8) | (($arrColor['blue'] & 0xFF) << 0);
-        return $intColor;
-    }
-
-    public static function arrayColorToHexColor($arrColor = array(0, 0, 0)) {
-        $intColor = self::arrayColorToIntColor($arrColor);
-        $hexColor = self::intColorToHexColor($intColor);
-        return $hexColor;
-    }
-
-    public static function intColorToArrayColor($intColor = 0) {
-        $arrColor['alpha'] = ($intColor >> 24) & 0xFF;
-        $arrColor['red'] = ($intColor >> 16) & 0xFF;
-        $arrColor['green'] = ($intColor >> 8) & 0xFF;
-        $arrColor['blue'] = ($intColor) & 0xFF;
-        return $arrColor;
-    }
-
-    public static function intColorToHexColor($intColor = 0) {
-        $arrColor = self::intColorToArrayColor($intColor);
-        $hexColor = self::arrayColorToHexColor($arrColor);
-        return $hexColor;
-    }
-
-    public static function hexColorToArrayColor($hexColor = "000000") {
-        $arrColor['red'] = hexdec(substr($hexColor, 0, 2));
-        $arrColor['green'] = hexdec(substr($hexColor, 2, 2));
-        $arrColor['blue'] = hexdec(substr($hexColor, 4, 2));
-        $arrColor['alpha'] = 1;
-        return $arrColor;
-    }
-
-    public static function hexColorToIntColor($hexColor = "000000") {
-        $arrColor = self::hexColorToArrayColor($hexColor);
-        $intColor = self::arrayColorToIntColor($arrColor);
-        return $intColor;
     }
 
     public function __get($name) {
@@ -311,12 +279,9 @@ class Image_Image {
         }
     }
 
-    private function _file_info($filename) {
-        $ext = array(
-            'B', 'KB', 'MB', 'GB'
-        );
+    private function _file_info($filename, $round = 2) {
+        $ext = array('B', 'KB', 'MB', 'GB');
 
-        $round = 2;
         $this->filepath = $filename;
         $this->filename = basename($filename);
         $this->filesize_bytes = filesize($filename);
@@ -339,5 +304,173 @@ oHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAA
 DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=
 BLACKPNG;
     }
+    
+    
+    /*** Color Helper Static Methods **/
+        
+    /**
+     * Array => Hex
+     * 
+     * @param array $arrColor
+     * @return string
+     */
+    public static function arrayColorToHexColor($arrColor = array(0, 0, 0)) {
+        return self::intColorToHexColor(self::arrayColorToIntColor($arrColor));
+    }
+    
+    /**
+     * Int => Hex
+     * 
+     * @param int $intColor
+     * @return string
+     */
+    public static function intColorToHexColor($intColor = 0) {
+        return str_pad(dechex($intColor), 6, "0", STR_PAD_LEFT);
+    }
+    
+    /**
+     * Hex => Int
+     * 
+     * @param string $hexColor
+     * @return int
+     */
+    public static function hexColorToIntColor($hexColor = "000000") {
+        return self::arrayColorToIntColor(self::hexColorToArrayColor($hexColor));
+    }
+    
+    /**
+     * Int => Array
+     * 
+     * @param int $intColor
+     * @return array
+     */
+    public static function intColorToArrayColor($intColor = 0) {
+        return array(
+            'alpha' => ($intColor >> 24) & 0xFF,
+            'red' => ($intColor >> 16) & 0xFF,
+            'green' => ($intColor >> 8) & 0xFF,
+            'blue' => ($intColor) & 0xFF
+        );
+    }
 
+    /**
+     * Hex => Array
+     * 
+     * @param string $hexColor
+     * @return array
+     */
+    public static function hexColorToArrayColor($hexColor = "000000") {
+        return array(
+            'alpha' => null,
+            'red' => hexdec(substr($hexColor, 0, 2)),
+            'green' => hexdec(substr($hexColor, 2, 2)),
+            'blue' => hexdec(substr($hexColor, 4, 2))
+        );
+    }
+    
+    /**
+     * Array => Int
+     * 
+     * @param array $arrColor
+     * @return int
+     */
+    public static function arrayColorToIntColor($arrColor = array(0, 0, 0)) {
+        return (($arrColor['alpha'] & 0xFF) << 24) | 
+               (($arrColor['red'] & 0xFF) << 16) |
+               (($arrColor['green'] & 0xFF) << 8) | 
+               (($arrColor['blue'] & 0xFF) << 0);
+    }
+    
+    /**
+     * Get current color in XYZ format
+     * 
+     * @param array $arrColor
+     * @return array
+     */
+    public static function arrayColorToXyz($arrColor = array(0, 0, 0)) {
+
+        // Normalize RGB values to 1
+        $arrColor = array_map(create_function('$item', 'return $item / 255;'), $arrColor);
+
+        $arrColor = array_map(create_function('$item', '$item = ($item > 0.04045) ? pow((($item + 0.055) / 1.055), 2.4) : $item / 12.92; return ($item * 100);'), $arrColor);
+
+        //Observer. = 2°, Illuminant = D65
+        $xyz = array(
+            'x' => ($arrColor['red'] * 0.4124) + ($arrColor['green'] * 0.3576) + ($arrColor['blue'] * 0.1805),
+            'y' => ($arrColor['red'] * 0.2126) + ($arrColor['green'] * 0.7152) + ($arrColor['blue'] * 0.0722),
+            'z' => ($arrColor['red'] * 0.0193) + ($arrColor['green'] * 0.1192) + ($arrColor['blue'] * 0.9505)
+        );
+
+        return $xyz;
+    }
+
+    /**
+     * Get color CIE-Lab values
+     * 
+     * @param array $arrColor
+     * @return array
+     */
+    public static function arraColorToLabCie($arrColor = array(0, 0, 0)) {
+        
+        $xyz = self::arrayColorToXyz($arrColor);
+
+        //Ovserver = 2*, Iluminant=D65
+        $xyz['x'] /= 95.047;
+        $xyz['y'] /= 100;
+        $xyz['z'] /= 108.883;
+
+        $xyz = array_map(create_function('$item', 'return ($item > 0.008856) ? pow($item, 1 / 3) : (7.787 * $item) + (16 / 116);'), $xyz);
+
+        return array(
+            'l' => (116 * $xyz['y']) - 16,
+            'a' => 500 * ($xyz['x'] - $xyz['y']),
+            'b' => 200 * ($xyz['y'] - $xyz['z'])
+        );
+    }
+    
+    /**
+     * Get HSV values for color
+     * (integer values from 0-255, fast but less accurate)
+     * 
+     * @param array $arrColor
+     * @return int 
+     */
+    public static function arrayColorToHsvInt($arrColor = array(0, 0, 0)) {
+
+        $rgbMin = min($arrColor);
+        $rgbMax = max($arrColor);
+
+        $hsv = array(
+            'hue' => 0,
+            'sat' => 0,
+            'val' => $rgbMax
+        );
+
+        // If value is 0, color is black
+        if ($hsv['val'] == 0) {
+            return $hsv;
+        }
+
+        // Calculate saturation
+        $hsv['sat'] = round(255 * ($rgbMax - $rgbMin) / $hsv['val']);
+        if ($hsv['sat'] == 0) {
+            $hsv['hue'] = 0;
+            return $hsv;
+        }
+
+        // Calculate hue
+        if ($rgbMax == $arrColor['red']) {
+            $hsv['hue'] = round(0 + 43 * ($arrColor['green'] - $arrColor['blue']) / ($rgbMax - $rgbMin));
+        } else if ($rgbMax == $arrColor['green']) {
+            $hsv['hue'] = round(85 + 43 * ($arrColor['blue'] - $arrColor['red']) / ($rgbMax - $rgbMin));
+        } else {
+            $hsv['hue'] = round(171 + 43 * ($arrColor['red'] - $arrColor['green']) / ($rgbMax - $rgbMin));
+        }
+        if ($hsv['hue'] < 0) {
+            $hsv['hue'] += 255;
+        }
+
+        return $hsv;
+    }
 }
+

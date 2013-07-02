@@ -91,16 +91,11 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
                 $sumb = 0;
                 $suma = 0;
                 for ($k = 0; $k < $matrix_width; $k++) {
-                    $xx = $i - (($matrix_width) >>
-                            1) + $k;
-                    $sumr += $p[$xx][$j]['r'] *
-                            $matrix[$k];
-                    $sumg += $p[$xx][$j]['g'] *
-                            $matrix[$k];
-                    $sumb += $p[$xx][$j]['b'] *
-                            $matrix[$k];
-                    $suma += $p[$xx][$j]['a'] *
-                            $matrix[$k];
+                    $xx = $i - (($matrix_width) >> 1) + $k;
+                    $sumr += $p[$xx][$j]['r'] * $matrix[$k];
+                    $sumg += $p[$xx][$j]['g'] * $matrix[$k];
+                    $sumb += $p[$xx][$j]['b'] * $matrix[$k];
+                    $suma += $p[$xx][$j]['a'] * $matrix[$k];
                 }
                 $p1[$i][$j]['r'] = $sumr / $matrix_sum;
                 $p1[$i][$j]['g'] = $sumg / $matrix_sum;
@@ -115,16 +110,11 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
                 $sumb = 0;
                 $suma = 0;
                 for ($k = 0; $k < $matrix_width; $k++) {
-                    $xy = $j - (($matrix_width) >>
-                            1) + $k;
-                    $sumr += $p1[$i][$xy]['r'] *
-                            $matrix[$k];
-                    $sumg += $p1[$i][$xy]['g'] *
-                            $matrix[$k];
-                    $sumb += $p1[$i][$xy]['b'] *
-                            $matrix[$k];
-                    $suma += $p1[$i][$xy]['a'] *
-                            $matrix[$k];
+                    $xy = $j - (($matrix_width) >> 1) + $k;
+                    $sumr += $p1[$i][$xy]['r'] * $matrix[$k];
+                    $sumg += $p1[$i][$xy]['g'] * $matrix[$k];
+                    $sumb += $p1[$i][$xy]['b'] * $matrix[$k];
+                    $suma += $p1[$i][$xy]['a'] * $matrix[$k];
                 }
                 $col = imagecolorallocatealpha($temp->image, ($sumr /
                         $matrix_sum), ($sumg / $matrix_sum), ($sumb /
@@ -132,6 +122,7 @@ class Image_Fx_Gaussian extends Image_Fx_Abstract implements Image_Plugin_Interf
                 imagesetpixel($temp->image, $i, $j, $col);
             }
         }
+        
         $this->_owner->image = $temp->image;
         unset($temp);
         return true;

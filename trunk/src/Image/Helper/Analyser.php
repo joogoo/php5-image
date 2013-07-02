@@ -309,14 +309,10 @@ class Image_Helper_Analyser extends Image_Helper_Abstract implements Image_Plugi
                 $hue = ($g - $b) / $delta;
             } else {
                 if ($g == $max) {
-                    $hue = 2.0 + ($b - $r) /
-                            $delta;
+                    $hue = 2.0 + ($b - $r) / $delta;
                 } else {
                     if ($b == $max) {
-                        $hue = 4.0 +
-                                ($r -
-                                $g) /
-                                $delta;
+                        $hue = 4.0 + ($r - $g) / $delta;
                     }
                 }
             }

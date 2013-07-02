@@ -61,14 +61,10 @@ class Image_Fx_Jitter extends Image_Fx_Abstract implements Image_Plugin_Interfac
                 $dis_y = $y + (rand(0, $this->jitter) - ($this->jitter / 2));
 
                 if ($this->wrap_around == 1) {
-                    $dis_x = ($dis_x < 0) ? $dis_x +
-                            $width : $dis_x;
-                    $dis_x = ($dis_x > $width) ? $dis_x -
-                            $width : $dis_x;
-                    $dis_y = ($dis_y < 0) ? $dis_y +
-                            $height : $dis_y;
-                    $dis_y = ($dis_y > $height) ? $dis_y -
-                            $height : $dis_y;
+                    $dis_x = ($dis_x < 0) ? $dis_x + $width : $dis_x;
+                    $dis_x = ($dis_x > $width) ? $dis_x - $width : $dis_x;
+                    $dis_y = ($dis_y < 0) ? $dis_y + $height : $dis_y;
+                    $dis_y = ($dis_y > $height) ? $dis_y - $height : $dis_y;
                 } else {
                     $dis_x = ($dis_x < 0) ? 0 : $dis_x;
                     $dis_x = ($dis_x > $width) ? $width : $dis_x;
