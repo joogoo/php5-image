@@ -69,17 +69,17 @@ class Image_Fx_Flip extends Image_Fx_Abstract implements Image_Plugin_Interface 
         if ($flip_x == true) {
             imagecopy($flip->image, $this->_owner->image, 0, 0, 0, 0, $src_x, $src_y);
             for ($x = 0; $x < $src_x; $x++) {
-                imagecopy($this->_owner->image, $flip->image, $src_x -
-                        $x - 1, 0, $x, 0, 1, $src_y);
+                imagecopy($this->_owner->image, $flip->image, $src_x - $x - 1, 0, $x, 0, 1, $src_y);
             }
         }
+        
         if ($flip_y == true) {
             imagecopy($flip->image, $this->_owner->image, 0, 0, 0, 0, $src_x, $src_y);
             for ($y = 0; $y < $src_y; $y++) {
-                imagecopy($this->_owner->image, $flip->image, 0, $src_y -
-                        $y - 1, 0, $y, $src_x, 1);
+                imagecopy($this->_owner->image, $flip->image, 0, $src_y - $y - 1, 0, $y, $src_x, 1);
             }
         }
+        
         $this->_owner->image = $flip->image;
         unset($flip);
         return true;

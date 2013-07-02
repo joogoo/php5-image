@@ -93,9 +93,7 @@ class Image_Fx_Crop extends Image_Fx_Abstract implements Image_Plugin_Interface 
         $src_x = $this->_owner->handle_x - floor($this->canvas_x / 2);
         $src_y = $this->_owner->handle_y - floor($this->canvas_y / 2);
 
-        imagecopy(
-                $crop->image, $this->_owner->image, 0, 0, $src_x, $src_y, $this->canvas_x, $this->canvas_y
-        );
+        imagecopy($crop->image, $this->_owner->image, 0, 0, $src_x, $src_y, $this->canvas_x, $this->canvas_y);
 
         $this->_owner->image = $crop->image;
 
