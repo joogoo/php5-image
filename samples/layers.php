@@ -10,6 +10,8 @@ $secondImage = new Image_Image(dirname(__FILE__) . '/source/cherry.png');
 
 $layer = new Image_Draw_Layer($secondImage);
 
+$image->attach(new Image_Fx_Corners(15,15));
+
 $image->attach($layer);
 
 $image->imagePng();

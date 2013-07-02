@@ -41,7 +41,6 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @since     File available since Release 1.0.0
  */
-require_once 'Image/Exception.php';
 
 require_once 'Image/Plugin/Interface.php';
 
@@ -132,15 +131,14 @@ class Image_Image {
 
             $this->_file_info($filename);
         } else {
-            //file does not exist
-            return false;
+            require_once 'Image/Exception.php';
+            
+            throw new Image_Exception('Image file does not exist');
         }
     }
 
     public function printImage($type, $filename = "") {
-        if (!isset($this->image)) {
-            return false;
-        }
+
         $this->evaluateFXStack();
 
         $gd_function = 'image' . strtolower($type);
@@ -153,33 +151,37 @@ class Image_Image {
             }
         }
     }
+    
+    public function imagePng($filename = "") {
+        return $this->printImage('png', $filename);
+    }
+    
+    public function imageJpeg($filename = "") {
+        return $this->printImage('jpeg', $filename);
+    }
+    
+    public function imageWbmp($filename = "") {
+        return $this->printImage('wbmp', $filename);
+    }
+    
+    public function imageGif($filename = "") {
+        return $this->printImage('gif', $filename);
+    }
 
     public function destroyImage() {
-        if (!isset($this->image)) {
-            return false;
-        }
         imagedestroy($this->image);
         unset($this->image);
     }
 
     public function imagesx() {
-        if (!isset($this->image)) {
-            return false;
-        }
         return imagesx($this->image);
     }
 
     public function imagesy() {
-        if (!isset($this->image)) {
-            return false;
-        }
         return imagesy($this->image);
     }
 
     public function imageIsTrueColor() {
-        if (!isset($this->image)) {
-            return false;
-        }
         return imageistruecolor($this->image);
     }
 
@@ -190,9 +192,6 @@ class Image_Image {
      * @return int
      */
     public function imageColorAt($x = 0, $y = 0) {
-        if (!isset($this->image)) {
-            return false;
-        }
         $color = imagecolorat($this->image, $x, $y);
         if (!$this->imageIsTrueColor()) {
             $arrColor = imagecolorsforindex($this->image, $color);
@@ -203,10 +202,6 @@ class Image_Image {
     }
 
     public function imagefill($x = 0, $y = 0, $color = "FFFFFF", $alpha = null) {
-        if (!isset($this->image)) {
-            return false;
-        }
-
         imagefill($this->image, $x, $y, $this->imagecolorallocate($color, $alpha));
     }
 
@@ -243,55 +238,32 @@ class Image_Image {
     public function testImageHandle() {
         return (bool) (isset($this->image) && 'gd' == get_resource_type($this->image));
     }
-
-    public function __get($name) {
-        if ($name == "image") {
-            return $this->image;
-        }
-        if ($name == "handle_x") {
-            return ($this->mid_handle == true) ? floor($this->imagesx() / 2) : 0;
-        }
-        if ($name == "handle_y") {
-            return ($this->mid_handle == true) ? floor($this->imagesy() / 2) : 0;
-        }
-        if ('#' == $name{0}) {
-            return $this->_attachments_stack[$name];
-        } elseif (array_key_exists($name, $this->_settings)) {
-            return $this->_settings[$name];
-        } else {
-            return false;
-        }
+    
+    public function getHandleX() {
+        return ($this->mid_handle == true) ? floor($this->imagesx() / 2) : 0;
     }
-
-    public function __set($name, $value) {
-        if ($name == "image") {
-            $this->image = $value;
-        } elseif ('#' == $name{0}) {
-            $this->_attachments_stack[$name] = $value;
-        } else {
-            $this->_settings[$name] = $value;
-        }
+    
+    public function getHandleY() {
+        return ($this->mid_handle == true) ? floor($this->imagesy() / 2) : 0;
     }
-
-    public function __call($name, $arguments) {
-        if (substr($name, 0, 5) == 'image') {
-            return $this->printImage(substr($name, 5, strlen($name) - 5), empty($arguments) ? '' : $arguments[0]);
-        }
+    
+    public function getSettings($key) {
+        return isset($this->_settings[$key]) ? $this->_settings[$key] : null;
     }
 
     private function _file_info($filename, $round = 2) {
         $ext = array('B', 'KB', 'MB', 'GB');
 
-        $this->filepath = $filename;
-        $this->filename = basename($filename);
-        $this->filesize_bytes = filesize($filename);
-        $size = $this->filesize_bytes;
+        $this->_settings['filepath'] = $filename;
+        $this->_settings['filename'] = basename($filename);
+        $this->_settings['filesize_bytes'] = filesize($filename);
+        $size = $this->_settings['filesize_bytes'];
         for ($i = 0; $size > 1024 && $i < count($ext) - 1; $i++) {
             $size /= 1024;
         }
-        $this->filesize_formatted = round($size, $round) . $ext[$i];
-        $this->original_width = $this->imagesx();
-        $this->original_height = $this->imagesy();
+        $this->_settings['filesize_formatted'] = round($size, $round) . $ext[$i];
+        $this->_settings['original_width'] = $this->imagesx();
+        $this->_settings['original_height'] = $this->imagesy();
     }
 
     private function _blankpng() {

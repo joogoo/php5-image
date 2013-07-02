@@ -63,7 +63,7 @@ class Image_Draw_Infobar extends Image_Draw_Abstract implements Image_Plugin_Int
         $src_y = $this->_owner->imagesy();
         $temp = new Image_Image();
         $temp->createImageTrueColorTransparent($src_x, $src_y + 20);
-        $text = str_replace("[Filename]", $this->_owner->filename, $this->info);
+        $text = str_replace("[Filename]", $this->_owner->getSettings('filename'), $this->info);
         switch ($this->position) {
             case "t":
                 $x = 0;

@@ -114,8 +114,8 @@ class Image_Draw_Watermark extends Image_Draw_Abstract implements Image_Plugin_I
                 $y = $height - $watermark_height;
                 break;
             case "user":
-                $x = $this->position_x - ($this->watermark->handle_x / 2);
-                $y = $this->position_y - ($this->watermark->handle_y / 2);
+                $x = $this->position_x - ($this->watermark->getHandleX() / 2);
+                $y = $this->position_y - ($this->watermark->getHandleY() / 2);
                 break;
             default:
                 $x = 0;
