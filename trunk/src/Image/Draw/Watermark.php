@@ -47,7 +47,10 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Watermark extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public function __construct(Image_Image $watermark = NULL, $position = "br") {
+    protected $position = "br";
+    protected $watermark;
+
+    public function __construct(Image_Image $watermark = null, $position = "br") {
         $this->watermark = $watermark;
         $this->position = $position;
     }
