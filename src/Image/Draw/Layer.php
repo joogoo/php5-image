@@ -47,10 +47,30 @@ require_once 'Image/Plugin/Interface.php';
 
 class Image_Draw_Layer extends Image_Draw_Abstract implements Image_Plugin_Interface {
 
-    public function __construct(Image_Image $img = null) {
+    protected $position = "br";
+    protected $preserveLayerSize = true;
+    
+    public function __construct(Image_Image $img = null, $preserveLayerSize = true, $position = "br") {
         $this->img = $img;
+        $this->preserveLayerSize = $preserveLayerSize;
+        $this->position = $position;
     }
+    
+    public function setPosition() {
+        $args = func_get_args();
+        switch (count($args)) {
+            case 1:
+                $this->position = $args[0];
+                break;
 
+            case 2:
+                $this->position = "user";
+                $this->position_x = $args[0];
+                $this->position_y = $args[1];
+                break;
+        }
+    }
+    
     public function generate() {
         
         //getting the width and height of the body part image, (should be the same size as the canvas)
@@ -66,8 +86,59 @@ class Image_Draw_Layer extends Image_Draw_Abstract implements Image_Plugin_Inter
         //making sure to preserve the alpha info
         imagesavealpha($this->_owner->image, true);
 
+        switch ($this->position) {
+            case "tl":
+                $x = 0;
+                $y = 0;
+                break;
+            case "tm":
+                $x = ($width - $layer_w) / 2;
+                $y = 0;
+                break;
+            case "tr":
+                $x = $width - $layer_w;
+                $y = 0;
+                break;
+            case "ml":
+                $x = 0;
+                $y = ($height - $layer_h) / 2;
+                break;
+            case "mm":
+                $x = ($width - $layer_w) / 2;
+                $y = ($height - $layer_h) / 2;
+                break;
+            case "mr":
+                $x = $width - $layer_w;
+                $y = ($height - $layer_h) / 2;
+                break;
+            case "bl":
+                $x = 0;
+                $y = $height - $layer_h;
+                break;
+            case "bm":
+                $x = ($width - $layer_w) / 2;
+                $y = $height - $layer_h;
+                break;
+            case "br":
+                $x = $width - $layer_w;
+                $y = $height - $layer_h;
+                break;
+            case "user":
+                $x = $this->position_x;
+                $y = $this->position_y;
+                break;
+            default:
+                $x = 0;
+                $y = 0;
+                break;
+        }
+        
         //finally, putting that image on top of our canvas
-        imagecopyresampled($this->_owner->image, $this->img->image, 0, 0, 0, 0, $width, $height, $layer_w, $layer_h);
+        if ($this->preserveLayerSize) {
+            imagecopyresampled($this->_owner->image, $this->img->image, $x, $y, 0, 0, $layer_w, $layer_h, $layer_w, $layer_h);
+        } else {
+            imagecopyresampled($this->_owner->image, $this->img->image, $x, $y, 0, 0, $width, $height, $layer_w, $layer_h);
+        }
 
         //$this->_owner->image
         return true;
